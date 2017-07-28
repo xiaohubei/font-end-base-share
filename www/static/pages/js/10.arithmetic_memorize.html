@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<script type="text/javascript">
+	// JavaScript函数式编程之记忆(memorize)
+	// http://www.codeweblog.com/javascript%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E4%B9%8B%E8%AE%B0%E5%BF%86-memorize/
+
+	
+	// 这种缓存技巧叫做记忆（memorize）
+	function memorize( fn ) {
+		var cache = {};//保存缓存的对象
+		return function(){
+			console.log(cache);
+			// var key = arguments.length + '_' + Array.prototype.join.call( arguments, "_");
+			var key = arguments.length + '_' + Array.from(arguments).join("_");
+			 //产生一个缓存的键： 参数长度+参数
+			if(key in cache) {
+				return cache[key];
+			}else {
+				// console.log("heiheihei");
+				return cache[key] = fn.apply( this, arguments );
+			}
+		}
+	}
+
+	//计算最大公约数
+	function gcd(a,b) {
+		var t;
+		//把a 修正为最大的数
+		if(a < b) {
+			t=b; 
+			b=a; 
+			a=t;
+		}
+
+		while(b != 0) {
+			t=b;
+			b=a%b;
+			a=t;
+		}
+
+		return a;
+	}
+
+	var gcdmemo = memorize(gcd);
+	// console.log(gcdmemo(85,187));
+	// console.log(gcdmemo(85,187));
+	// 85 17*5
+	// 187 17*11
+	// 187%85 = 17
+
+
+	// 一个阶乘的求解例子：
+	var fact = memorize(function(n) {
+		return (n<=1) ? 1 : n*fact(n-1);
+	});
+	console.log(fact(5));
+	console.log(fact(5));
+
+</script>
+</body>
+</html>

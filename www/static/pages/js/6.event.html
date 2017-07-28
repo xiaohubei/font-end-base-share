@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	html,body{
+		margin: 0;
+	}
+		 #test1{
+		 	position: relative;
+		 	left:300px;
+		 	top:100px;
+		 	width: 200px;
+		 	height: 50px;
+		 	padding: 10px;
+		 	margin:3px;
+		 	border:1px solid red;
+		 	background: #ccc;
+		 	color:#fff;
+		 }
+	</style>
+</head>
+<body>
+<!-- 这是测试节点的demo1 -->
+	<div id="test1" class="test_class" data-ss =" xiaoming">
+		<div id="test_inner1">我试test1的内容</div>
+		<div id="test_inner2">fafa</div>
+	</div>
+<!-- 这是测试节点的demo2 -->
+	<a id="test2" href="/test/test2/test.html">我试test2的内容</a>
+<!-- 这是测试节点的demo3 -->
+	<div id="test2">我试test3的内容</div>
+
+<script type="text/javascript">
+
+	var t1 = document.getElementById("test1");
+	var t2 = document.getElementById("test2");
+	var test_inner1 = document.getElementById("test_inner1");
+	var test_inner2 = document.getElementById("test_inner2");
+
+	
+	// 1 什么是事件、事件对象、事件源、事件委托？
+	//var e = window.event || arguments[0]; 
+	//事件 ： 事件是始终存在的，不会因为我们没有给事件绑定函数，事件就不执行了。只要发生了行为，事件就一定会触发
+	//事件对象： 当事件被触发的时候，事件的所有详细信息都会被统一保存在一个特定的对象中，我们把这个对象称为事件对象。
+	//事件源 ( 事件发生的源头：最初触发事件的那个元素 )
+			//标准浏览器下 ： 使用 ev.target 属性表示。
+			//ie6/7/8下 ： 使用 event.scrElement 属性表示。
+	//事件委托 ： 把要在子孙节点身上触发事件时所有做的事情，放在一个指定的祖先节点身上来实现。 （原理是利用了事件冒泡）
+	//事件委托好长：  1，提高性能。2，新添加的元素还会有之前的事件。
+
+     /*
+		在标准浏览器下： 事件对象是事件处理函数的第一个参数。ev
+        在ie浏览器中 ： 事件对象是一个全局对象 ： window.event，不是事件处理函数的参数，他仅仅只是个全局对象。
+        ev 和 event 都是指的事件对象，只是 ev 是在标准浏览器下用来保存事件对象的变量，
+        而 event 是在ie下（新版本chrome） 下用来保存事件对象的全局变量。
+     */
+
+
+
+	// 2 DOM的两种事件模型 冒泡事件和捕获事件
+	//冒泡型事件：事件按照从最特定的事件目标到最不特定的事件目标的顺序触发
+	//捕获型事件(event capturing)：事件从最不精确的对象(document 对象)开始触发，然后到最精确(也可以在窗口级别捕获事件，不过必须由开发人员特别指定)。
+	//DOM事件流：同时支持两种事件模型：捕获型事件和冒泡型事件，
+			//但是，捕获型事件先发生。两种事件流会触及DOM中的所有对象，从document对象开始，也在document对象结束。
+
+	// 3.事件处理的2中绑定方式？（也叫事件处理程序）
+
+			/*标准浏览器：
+                       obj.addEventListener(事件名称,事件处理函数,是否捕获);
+                       1，事件名称是没有 'on' 的。
+                       2，按绑定的顺序调用事件处理函数。
+                       3，this 就是绑定事件处理函数的对象。 （ this是没有问题的 ）
+               ie低版本浏览器：
+                       obj.attachEvent(事件名称,事件处理函数);
+                       1，事件名称是有 'on' 的。
+                       2，按绑定的相反顺序调用事件处理函数。
+                       3，this 会变成 window。 （ this 被修改了 ）*/
+	//addEventListener(event,fn,useCapture) w3c标准
+	//removeEventListener(event,fn,useCapture) w3c标准
+	//attachEvent() 不需要指定capture/bubble参数，因为ie环境下都是使用Bubble模式
+	//detachEvent(event,function);  
+	// 跨浏览器的事件处理程序兼容写法：addHandler()和removeHandler()
+	//if (typeof window.addEventListener != “undefined” ){}
+
+	//绑定事件默认行为的阻止
+	//addEventListener: preventDefault();
+	//attachEvent: return false;
+
+	//阻止事件传播的方法
+	//addEventListener: stopPropagation();
+	//attachEvent: cancelBubble = true ;
+
+
+/*
+	t1.addEventListener('click', function (e){
+		//debugger;
+		console.log("t1");
+		console.log(e.srcElement);
+		console.log(e.target);
+
+		//e.stopPropagation();
+		//e.preventDefault()
+	}, false)
+
+	test_inner1.addEventListener('click', function (e){
+		//debugger;
+		console.log("test_inner1");
+		console.log(e.srcElement);
+		console.log(e.target);
+		e.stopPropagation();
+		//event.cancelBubble = true;
+		//return false;
+	}, false)
+*/
+	// 只在ie有attachEvent
+	/*t1.attachEvent('onclick', function (e){
+		//debugger;
+		console.log("t1");
+		console.log(e.srcElement);
+		console.log(e.target);
+
+	}, false)
+
+	test_inner1.attachEvent('onclick', function (e){
+		//debugger;
+		console.log("test_inner1");
+		console.log(e.srcElement);
+		console.log(e.target);
+
+	}, false)*/
+
+	//tip:不产生冒泡的两个事件
+		/*onmouseenter : 当鼠标进入元素时触发的事件。
+        onmouseleave ：当鼠标离开元素时触发的事件。
+        最早是只有ie支持的事件。
+     */
+
+
+
+	// 4.常用事件
+	// 焦点事件： 所有可以交互的元素都有焦点事件。onfocus onblur onselect
+
+	//鼠标事件：click、dbclick、mousedown、mouseup、mouseover、mouseout、mousemove
+	//键盘事件：keydown、keypress、keyup
+	//HTML事件：load、unload、abort、error、select、change、submit、reset、resize、scroll、focus、blur
+
+	// 5.this 关键字
+		/*
+	       1，函数加小括号直接执行，this 一定是 window .
+	       2，事件处理函数中的this，一定是触发事件的那个对象。
+	       3，定时器中的 this 一定是 window。
+	       4，方法中的 this 一定是方法所属的那个对象。
+		*/
+
+
+	//6. 鼠标事件的参数
+	/*e.type	事件的类型，如click，mouseover
+	事件的3个阶段	1 捕获阶段 2 目标阶段 3 冒泡阶段
+	e.eventPhase	事件阶段
+	shiftKey/ctrlKey/altKey	按下鼠标同时按下组合键
+	button	获取鼠标的按键
+	e.clientX和e.clientY	获取鼠标在可视区域的位置*/
+	t1.onmousemove = function (e){
+		//debugger;
+		console.log("e.type: " + e.type);
+		console.log("e.clientX: " + e.clientX);
+		console.log("e.clientY: " + e.clientY);
+	}
+
+	document.onkeydown = function (e){	
+		//debugger;
+		console.log("e.code: " + e.code + "e.keyCode: " + e.keyCode );
+		//console.log("e.keyCode: " + e.keyCode);
+		//console.log("e.ctrlKey: " + e.ctrlKey);
+		//console.log("e.shiftKey: " + e.shiftKey);
+		//console.log("e.altKey: " + e.altKey);
+		console.log(e);
+	}
+	//enter 是13 ，esc 27, delete 8 caps lock是20
+	
+
+	/*keydown  按下时
+	keypress  按下  keyCode  键盘码，只有数字和字母对应ASCII码
+	keyup  抬起时   charCode  对应ASCII码，只有在keypress中才生效（IE9+）*/
+
+	 
+	//事件DOMContentLoaded和load的区别?
+	// DOM文档加载的步骤为
+
+	// 解析HTML结构。
+	// 加载外部脚本和样式表文件。
+	// 解析并执行脚本代码。
+	// DOM树构建完成。//DOMContentLoaded
+	// 加载图片等外部文件。
+	// 页面加载完毕。//load
+	
+	//用原生js可以这么写
+
+	/*// 不兼容老的浏览器，兼容写法见[jQuery中ready与load事件](http://www.imooc.com/code/3253)，或用jQuery
+	document.addEventListener("DOMContentLoaded", function() {
+	   // ...代码...
+	}, false);
+
+	window.addEventListener("load", function() {
+	    // ...代码...
+	}, false);
+	用jQuery这么写
+
+	// DOMContentLoaded
+	$(document).ready(function() {
+	    // ...代码...
+	});
+
+	//load
+	$(document).load(function() {
+	    // ...代码...
+	});*/
+
+</script>
+</body>
+</html>

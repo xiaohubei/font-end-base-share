@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<script type="text/javascript">
+	
+	//作用：改变this指向；
+	//apply：应用某一对象的一个方法，用另一个对象替换当前对象。例如：B.apply(A, arguments);即A对象应用B对象的方法。
+
+	// call：调用一个对象的一个方法，以另一个对象替换当前对象。例如：B.call(A, args1,args2);即A对象调用B对象的方法。
+
+	// 基本用法
+	/*var fun1 = function (a,b){
+		return a +b;
+	};
+
+	var fun2 = function(a,b){
+		return a - b;
+	};
+
+	// apply
+	console.log( "fun2(4,2): " + fun1.apply(fun2,[4,2]) );
+	console.log( "fun1(4,2): " + fun2.apply(fun1,[4,2]) );
+
+	// call
+	console.log( "fun1(4,2): " + fun2.call(fun1, 4, 2) );
+	console.log( "fun2(4,2): " + fun1.call(fun2, 4, 2) );*/
+
+	// 2.实现继承/实现多重集成 (把方法挂在到prototype上;)
+
+	/*function Base (name){
+		this.name = name;
+		this.showName = function (){
+			console.log(this.name);
+		};
+
+		this.sub = function(a,b){
+			return a - b;
+		}
+	};
+
+	function Common(a,b){
+		this.add = function (a,b){
+			return a + b;
+		}
+	}
+
+	//Base.prototype.showName = function (){
+	//	console.log(this.name);
+	//};
+
+	function Instance (name){
+		Base.apply(this, [name]);
+		Common.apply(this, [name]);
+		//Base.call(this, name);
+	};
+
+	var instance =  new Instance("xiaoming");
+	instance.showName();
+	console.log(instance.sub(3,1));
+	console.log(instance.add(3,1));*/
+
+	// 3.apply的一些其他技巧
+	// 如何求的一个数组的最大值？
+	// 如何实现两个数组的合并
+	/*var arr = [1,2,3,44,5,6];
+	console.log(Math.max(1,2,33,4));
+	console.log(Math.max.apply(null, arr));
+	console.log(Math.min.apply(null, arr));
+
+	var a = [1,2,3];
+	var b = [4,5,6];
+	var c = Array.prototype.push.apply(a, b);
+	console.log(a);
+	console.log(b);
+	console.log(c);*/
+
+
+	// 4.Math的几个方法：
+	var a = -1.2;
+	console.log(Math.round(a));
+	console.log(Math.floor(a));
+	console.log(Math.ceil(a));
+	console.log(Math.abs(a));
+
+</script>
+</body>
+</html>

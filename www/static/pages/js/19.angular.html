@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body ng-app="myApp">
+	<div ng-controller="TestCtrl">
+	  <p>{{name}}</p>
+	  <div ng-if="show">
+	    <input type="text" ng-model="name">
+	  </div>
+	</div>
+<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+<script type="text/javascript">
+	// 1. ng-if 跟 ng-show/hide 的区别有哪些？
+		// 第一点区别是，ng-if 在后面表达式为 true 的时候才创建这个 dom 节点，ng-show 是初始时就创建了，用 display:block 和 display:none 来控制显示和不显示。
+
+		// 第二点区别是，ng-if 会（隐式地）产生新作用域，ng-switch 、 ng-include 等会动态创建一块界面的也是如此。
+		//所以上面ng-model变了，上面的name并不会变
+
+	
+	// 2. ng-repeat迭代数组的时候，如果数组中有相同值，会有什么问题，如何解决？
+	// 会提示 Duplicates in a repeater are not allowed. 加 track by $index 可解决。当然，也可以 trace by 任何一个普通的值，只要能唯一性标识数组中的每一项即可（建立 dom 和数据之间的关联）。
+
+	// ng-click 中写的表达式，能使用 JS 原生对象上的方法吗？
+	// 不止是 ng-click 中的表达式，只要是在页面中，都不能直接调用原生的 JS 方法，因为这些并不存在于与页面对应的 Controller 的 $scope 中。
+
+	// {{now | 'yyyy-MM-dd'}} 这种表达式里面，竖线和后面的参数通过什么方式可以自定义？
+		// 内置 filter
+
+		// ng 内置的 filter 有九种：
+
+		// date（日期）
+		// currency（货币）
+		// limitTo（限制数组或字符串长度）
+		// orderBy（排序）
+		// lowercase（小写）
+		// uppercase（大写）
+		// number（格式化数字，加上千位分隔符，并接收参数限定小数点位数）
+		// filter（处理一个数组，过滤出含有某个子串的元素）
+		// json（格式化 json 对象）
+		// filter 有两种使用方法，一种是直接在页面里：
+
+		// <p>{{now | date : 'yyyy-MM-dd'}}</p>
+
+		// 栗子
+		// app.filter('timesFilter', function(){
+		//     return function(item, times){
+		//         var result = '';
+		//         for(var i = 0; i < times; i++){
+		//             result += item;
+		//         }
+		//         return result;
+		//     }
+		// })
+
+
+	// factory、service 和 provider 是什么关系？	
+	// service => factory => provider
+
+	//从底层实现上来看，service 调用了 factory，返回其实例；factory 和 service 功能类似，只不过 factory 是普通 function，可以返回任何东西（return 的都可以被访问，所以那些私有变量怎么写，你懂的）；service 是构造器，可以不返回（绑定到 this 的都可以被访问）；
+
+	// factory 调用了 provider，返回其 $get 中定义的内容。provider 是加强版 factory，返回一个可配置的 factory。
+
+	// angular 的数据绑定采用什么机制？详述原理
+	// 双向数据绑定，脏数据检查
+
+	// 原理就是，Angular 在 scope 模型上设置了一个 监听队列，用来监听数据变化并更新 view 。
+	// 每次绑定一个东西到 view 上时 AngularJS 就会往 $watch 队列里插入一条 $watch，用来检测它监视的 model 里是否有变化的东西。当浏览器接收到可以被 angular context 处理的事件时，$digest 循环就会触发，遍历所有的 $watch，最后更新 dom。
+
+		// 举个栗子
+
+		// <button ng-click="val=val+1">increase 1</button>
+		// click 时会产生一次更新的操作（至少触发两次 $digest 循环）
+
+		// 按下按钮
+		// 浏览器接收到一个事件，进入到 angular context
+		// $digest 循环开始执行，查询每个 $watch 是否变化
+		// 由于监视 $scope.val 的 $watch 报告了变化，因此强制再执行一次 $digest 循环
+		// 新的 $digest 循环未检测到变化
+		// 浏览器拿回控制器，更新 $scope.val 新值对应的 dom
+		// $digest 循环的上限是 10 次（超过 10次后抛出一个异常，防止无限循环）。
+
+	// 两个平级界面块 a 和 b，如果 a 中触发一个事件，有哪些方式能让 b 知道？详述原理
+		// 这个问题换一种说法就是，如何在平级界面模块间进行通信。有两种方法，一种是共用服务，一种是基于事件。
+		// 共用服务
+		// 在 Angular 中，通过 factory 可以生成一个单例对象，在需要通信的模块 a 和 b 中注入这个对象即可。
+
+		// 基于事件
+
+		// 这个又分两种方式
+
+		// 第一种是借助父 controller。在子 controller 中向父 controller 触发（$emit）一个事件，然后在父 controller 中监听（$on）事件，再广播（$broadcast）给子 controller ，这样通过事件携带的参数，实现了数据经过父 controller，在同级 controller 之间传播。
+
+		// 第二种是借助 $rootScope。每个 Angular 应用默认有一个根作用域 $rootScope， 根作用域位于最顶层，从它往下挂着各级作用域。所以，如果子控制器直接使用 $rootScope 广播和接收事件，那么就可实现同级之间的通信。
+
+	// 一个 angular 应用应当如何良好地分层？	
+		// 作为一个 MVVM 框架，Angular 应用本身就应该按照 模型，视图模型（控制器），视图来划分。
+		// 这里逻辑代码的拆分，主要是指尽量让 controller 这一层很薄。提取共用的逻辑到 service 中 （比如后台数据的请求，数据的共享和缓存，基于事件的模块间通信等），提取共用的界面操作到 directive 中（比如将日期选择、分页等封装成组件等），提取共用的格式化操作到 filter 中等等。
+		// css
+		// modules
+		//   account
+		//     controllers
+		//     models
+		//     services
+		//     filters
+		//     templates
+		//   disk
+		//     controllers
+		//     models
+		//     services
+		//     filters
+		//     templates
+		    
+	// angular 应用常用哪些路由库，各自的区别是什么？
+	// Angular1.x 中常用 ngRoute 和 ui.router，无论是 ngRoute 还是 ui.router，作为框架额外的附加功能，都必须以 模块依赖 的形式被引入。
+	// ngRoute 模块是 Angular 自带的路由模块，而 ui.router 模块是基于 ngRoute模块开发的第三方模块。
+
+	// ui.router 是基于 state （状态）的， ngRoute 是基于 url 的，ui.router模块具有更强大的功能，主要体现在视图的嵌套方面。
+
+	// 分属不同团队进行开发的 angular 应用，如果要做整合，可能会遇到哪些问题，如何解决？
+	// 会导致两个 module 下面的 serviceA 发生了覆盖。
+	// 貌似在 Angular1.x 中并没有很好的解决办法，所以最好在前期进行统一规划，做好约定，严格按照约定开发，每个开发人员只写特定区块代码。
+
+	// angular 的缺点有哪些？
+		// 不利于 SEO
+		// 强约束
+		// 性能问题
+		// 移动端 可尝试 Ionic，但并不完善。
+
+	// 可以用来 优化 Angular 应用的性能 的办法：
+
+		// 减少监控项（比如对不会变化的数据采用单向绑定）
+		// 主动设置索引（指定 track by，简单类型默认用自身当索引，对象默认使用 $$hashKey，比如改为 track by item.id）
+		// 降低渲染数据量（比如分页，或者每次取一小部分数据，根据需要再取）
+		// 数据扁平化（比如对于树状结构，使用扁平化结构，构建一个 map 和树状数据，对树操作时，由于跟扁平数据同一引用，树状数据变更会同步到原始的扁平数据）
+		// 另外，对于Angular1.x ，存在 脏检查 和 模块机制 的问题。
+
+
+	// 详述 angular 的 “依赖注入”
+
+		// 依赖注入是一种软件设计模式，目的是处理代码之间的依赖关系，减少组件间的耦合。
+		// 也就是说，在 Angular App 运行的时候，调用 myCtrl，自动做了 $scope 和 $http 两个依赖性的注入。
+
+
+		
+
+	var app = angular.module('myApp', []);
+	app.controller('TestCtrl', function($scope, $rootScope) {
+		debugger;
+	    $scope.show = true;
+	    $scope.name = 'htf';
+	});
+
+
+	// 解释下什么是$rootScrope以及和$scope的区别？
+		// 我们来看下如何产生$rootScope和$scope吧。
+		// step1:Angular解析ng-app然后在内存中创建$rootScope。
+		// step2:angular回继续解析，找到{{}}表达式，并解析成变量。
+		// step3:接着会解析带有ng-controller的div然后指向到某个controller函数。这个时候在这个controller函数变成一个$scope对象实例。
+
+
+	// 表达式 {{yourModel}}是如何工作的？
+	// 它依赖于 $interpolation服务，在初始化页面html后，它会找到这些表达式，并且进行标记，于是每遇见一个{{}}，则会设置一个$watch。而$interpolation会返回一个带有上下文参数的函数，最后该函数执行，则算是表达式$parse到那个作用域上。
+
+	// http://blog.csdn.net/donggx/article/details/53942493
+
+	// Angular中的digest周期是什么？
+
+	// 如何取消 $timeout, 以及停止一个$watch()?
+
+	// Angular Directive中restrict 中分别可以怎样设置？scope中@,=,&有什么区别？
+	
+
+
+
+	
+
+</script>
+</body>
+</html>

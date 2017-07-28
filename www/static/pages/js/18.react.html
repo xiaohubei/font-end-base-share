@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+
+<script type="text/javascript">
+
+	// https://zhuanlan.zhihu.com/p/24856035
+	// http://www.ruanyifeng.com/blog/2015/03/react.html
+	// https://facebook.github.io/react/docs/react-component.html
+
+	// 1.用于构建用户界面的Javascript,起源facebook,性能高，逻辑简单，组件复用，单项响应数据流
+	// 原先只是UI引擎，现在衍生的React Native已经可以前后端通吃的WEB app解决方案
+
+	// 调用 setState 之后发生了什么？
+	// 在代码中调用setState函数之后，React 会将传入的参数对象与组件当前的状态合并，然后触发所谓的调和过程（Reconciliation）。经过调和过程，React 会以相对高效的方式根据新的状态构建 React 元素树并且着手重新渲染整个UI界面。在 React 得到元素树之后，React 会自动计算出新的树与老树的节点差异，然后根据差异对界面进行最小化重渲染。在差异计算算法中，React 能够相对精确地知道哪些位置发生了改变以及应该如何改变，这就保证了按需更新，而不是全部重新渲染。
+
+	// 传入 setState 函数的第二个参数的作用是什么？
+	// 该函数会在setState函数调用完成并且组件开始重渲染的时候被调用，我们可以用该函数来监听渲染是否完成：
+	/*this.setState(
+	  { username: 'tylermcginnis33' },
+	  () => console.log('setState has finished and the component has re-rendered.')
+	)*/
+
+
+	//React 中 Element 与 Component 的区别是？
+	//简单而言，React Element 是描述屏幕上所见内容的数据结构，是对于 UI 的对象表述。典型的 React Element 就是利用 JSX 构建的声明式代码片然后被转化为createElement的调用组合。而 React Component 则是可以接收参数输入并且返回某个 React Element 的函数或者类。
+
+	// 在什么情况下你会优先选择使用 Class Component 而不是 Functional Component？
+	// 在组件需要包含内部状态或者使用到生命周期函数的时候使用 Class Component ，否则使用函数式组件。
+
+	//React 中 refs 的作用是什么？
+	// 获取真实的DOM节点
+	//Refs 是 React 提供给我们的安全访问 DOM 元素或者某个组件实例的句柄。
+	// document.getElementById();
+
+	// React 中 keys 的作用是什么？
+	// Keys 是 React 用于追踪哪些列表中元素被修改、被添加或者被移除的辅助标识。
+	// 一般在map的中用到，一般放id，不用的话，控制台会给出提醒
+
+	// Controlled Component 与 Uncontrolled Component 之间的区别是什么？
+	// （Controlled Component）代指那些交由 React 控制并且所有的表单数据统一存放的组件。
+	// 任何时候我们需要改变username变量值时，我们应当调用setState函数进行修改。
+
+	/*class ControlledForm extends Component {
+	  state = {
+	    username: ''
+	  }
+	  updateUsername = (e) => {
+	    this.setState({
+	      username: e.target.value,
+	    })
+	  }
+	  handleSubmit = () => {}
+	  render () {
+	    return (
+	      <form onSubmit={this.handleSubmit}>
+	        <input
+	          type='text'
+	          value={this.state.username}
+	          onChange={this.updateUsername} />
+	        <button type='submit'>Submit</button>
+	      </form>
+	    )
+	  }
+	}*/
+
+	// class UnControlledForm extends Component {
+	//   handleSubmit = () => {
+	//     console.log("Input Value: ", this.input.value)
+	//   }
+	//   render () {
+	//     return (
+	//       <form onSubmit={this.handleSubmit}>
+	//         <input
+	//           type='text'
+	//           ref={(input) => this.input = input} />
+	//         <button type='submit'>Submit</button>
+	//       </form>
+	//     )
+	//   }
+	// }
+	// 引入 React 或者其他 MVVM 框架最初的原因就是为了将我们从繁重的直接操作 DOM 中解放出来。
+
+	// shouldComponentUpdate 的作用是啥以及为何它这么重要？
+	// 允许我们手动地判断是否要进行组件更新，根据组件的应用场景设置函数的合理返回值能够帮我们避免不必要的更新。
+
+	// 如何告诉 React 它应该编译生产环境版本？
+	// 通常情况下我们会使用 Webpack 的 DefinePlugin 方法来将 NODE_ENV 变量值设置为 production。编译版本中 React 会忽略 propType 验证以及其他的告警信息，同时还会降低代码库的大小，React 使用了 Uglify 插件来移除生产环境下不必要的注释等信息。
+
+	// 概述下 React 中的事件处理逻辑?
+
+	// 1.为了解决跨浏览器兼容性问题，React 会将浏览器原生事件（Browser Native Event）封装为合成事件（SyntheticEvent）传入设置的事件处理器中。这里的合成事件提供了与原生事件相同的接口，不过它们屏蔽了底层浏览器的细节差异，保证了行为的一致性。
+	// 2.React并没有直接将事件附着到子元素上，而是以单一事件监听器的方式将所有的事件发送到顶层进行处理。这样 React 在更新 DOM 的时候就不需要考虑如何去处理附着在 DOM 上的事件监听器，最终达到优化性能的目的。
+
+
+	// 先说下传统的redux
+	// 个人感觉，redux简化了flux的流程。
+
+	// flux的流程是：
+
+	// view触发action中的方法；
+	// action发送dispatch；
+	// store接收新的数据进行合并，触发View中绑定在store上的方法；
+	// 通过修改局部state，改变局部view。
+	// redux是：
+
+	// view直接触发dispatch；
+	// 将action发送到reducer中后，根节点上会更新props，改变全局view。
+	// redux将view和store的绑定从手动编码中提取出来，放在了统一规范放在了自己的体系中。
+
+	// 而在基本的redux流程中，action只是充当了一个类似于topic之类的角色，reducer会根据这个topic确定需要如何返回新的数据；数据的结构处理也从store中移到了reducer中。
+
+
+	/*最后的再说两句
+	redux的优点：
+
+	redux把流程规范了，统一渲染根节点虽然对代码管理上规范了一些,只要有需要显示数据的组件，当相关数据更新时都会自动进行更新。
+
+	减少手动编码量，提高编码效率。
+
+	redux的缺点：
+
+	一个组件所需要的数据，必须由父组件传过来，而不能像flux中直接从store取。
+
+	当一个组件相关数据更新时，即使父组件不需要用到这个组件，父组件还是会重新render，可能会有效率影响，或者需要写复杂的shouldComponentUpdate进行判断。
+
+	redux的疑问：
+
+	redux如何处理多个api同时请求，在都得到结果后，再进行渲染（每个api都可能会单独拿出来做其他的请求）？
+
+	实际上在flux的流程中，在action中做api请求，然后返回数据，我并没有觉得违和。
+	但是放在了redux中，通过redux-thunk或redux-promise来阻止第一次dispatch，并将dispatch函数传入action中的回调方法再次调用。
+	我感觉不是很符合正常的语言逻辑，使action的功能好像并不单一，是不是有什么更改的实现方式呢？
+
+	多个reducer文件怎样组合会更好些？是每种类型的数据放在每个文件里，与flux中的store类似，最后在一个总的reducer文件中做combineReducers？*/
+
+	
+
+
+</script>
+</body>
+</html>

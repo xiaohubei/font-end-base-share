@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+</head>
+<body>
+<script type="text/javascript">
+
+	// 1. 什么是javascript的高阶函数？
+	// 高阶函数只是将函数作为参数或返回值的函数
+	/*var Moqi = function(p1){
+	    this.add = function (p2){
+	        return p1 + ' ' + p2;
+	    };
+	    return add;
+	};
+	console.log(Moqi('Hello')('World'));
+	console.log(typeof Moqi('Hello'));
+	console.log( Moqi('Hello'));*/
+
+	// 高级api Object.defineProperty()
+	// Object.defineProperty(obj, prop, descriptor)
+
+	// Object.assign 方法用于将所有可枚举的属性的值从一个或多个源对象复制到目标对象。它将返回目标对象。
+	// 复制一个 object
+	/*var c = {
+		sex:"male"
+	}
+	var a = {
+		name:"xiaoming", 
+		hobby:{
+			basketball:"love",
+			football:"fantastic"
+		},
+		sex:c
+	};
+	var b = Object.assign({}, a);
+	console.log( a);
+	console.log( b);
+	console.log( b.hobby.basketball);
+	console.log( b.hobby.football);
+
+	b.name = "xiaobai";
+	b.hobby = {};
+	console.log( a);
+	console.log( b);
+	console.log( b.hobby.basketball);
+	console.log( b.hobby.football);*/
+
+	// 合并 objects
+
+	/*var o1 = { a: 1 };
+	var o2 = { b: 2 };
+	var o3 = { c: 3 };
+
+	var obj = Object.assign({},o1, o2, o3);
+	console.log(obj); // { a: 1, b: 2, c: 3 }
+	console.log(o1);*/
+
+	// 继承属性和不可枚举属性是不能拷贝的
+
+	/*var obj = Object.create(	
+		{foo: 1}, // foo 是个继承属性。
+		{ 
+		    bar: {
+		        value: 2  // bar 是个不可枚举属性。
+		    },
+		    baz: {
+		        value: 3,
+		        enumerable: true  // baz 是个自身可枚举属性。
+		    }
+		}
+	);
+
+	var copy = Object.assign({}, obj);
+	console.log(copy); // { baz: 3 }*/
+
+	// Polyfill
+
+	/*if(Object.assign){
+
+		Object.defineProperty( Object.prototype, "assign", {
+			configurable: true,
+			get:function (target){
+				'use strict';
+
+				if( !target){
+					throw new TypeError('Cannot convert undefined or null to Object');
+				};
+				debugger;
+				target = Object(target);
+				for( var i = 1; i < arguments.length; i++){
+					var source = arguments[i];
+					if(source){
+						for( var key in source){
+							if(Object.prototype.hasOwnProperty.call(source, key)){
+								target[key] = source[key] + 1;
+							}
+						}
+					}
+				}
+				debugger;
+				return target;
+			}
+		})
+	}
+	var o1 = { a: 1 };
+		var o2 = { b: 2 };
+		var o3 = { c: 3 };
+
+		var obj = Object.assign({},o1, o2, o3);
+		console.log(obj); // { a: 1, b: 2, c: 3 }
+		console.log(o1);*/
+
+
+	// 函数声明和函数表达式的区别？
+	/*function Hello(name){
+	    console.log('我是' + name + ' 。');
+	}
+	console.log(Hello);
+
+	var World = function (name){
+		console.log('我是' + name + ' 。');
+	}
+	console.log(World);
+
+
+	function nameAlert(name){
+	    alert('你是：' + name + ' 。');
+	}
+	alert(nameAlert);
+	var anotherNameAlert=nameAlert;
+	anotherNameAlert('myvin');*/
+
+	// <!-- 函数声明 -->
+	/*
+	sayTruth();
+	function sayTruth(){
+	    alert('i am xiaoming');
+	}
+	*/
+	// <!-- 函数表达式 -->
+	/*
+	sayTruth();
+	var sayTruth=function(){
+	    alert('myvin is handsome.');
+	}
+	*/
+	// ECMAScript规范中表示，函数声明语句可以出现在全局代码中，或者内嵌在其他函数中，但是不能出现在循环、条件判、或者try/finally以及with语句中。
+	
+	/*
+	sayTruth(); 
+	if(1){
+		function sayTruth(){alert('xiaoming is handsome')};
+	}else{
+		function sayTruth(){alert('xiaoming is ugly')};
+	}
+	*/
+    
+	
+	
+
+</script>
+</body>
+</html>

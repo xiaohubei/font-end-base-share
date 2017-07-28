@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		html,body{
+			margin: 0;
+		}
+		#test1{
+		 	position: relative;
+		 	left:300px;
+		 	top:100px;
+		 	width: 200px;
+		 	height: 50px;
+		 	padding: 10px;
+		 	margin:3px;
+		 	border:1px solid red;
+		 	background: #ccc;
+		 	color:#fff;
+		}
+	</style>
+</head>
+<body>
+<!-- 这是测试节点的demo1 -->
+	<div id="test1" class="test_class" data-ss =" xiaoming" style="display: none;">
+		<div id="test_inner1">我试test1的内容</div>
+		<div id="test_inner2">fafa</div>
+	</div>
+<!-- 这是测试节点的demo2 -->
+	<a id="test2" href="/test/test2/test.html" style="display: none;">我试test2的内容</a>
+<!-- 这是测试节点的demo3 -->
+	<div id="test2" style="display: none;">我试test3的内容</div>
+
+<script type="text/javascript">
+
+
+	var t1 = document.getElementById("test1");
+	var t2 = document.getElementById("test2");
+	var i1 = document.getElementById("test_inner1");
+
+	// 字符串、数组的操作基本api讲解
+	// 答错没关系，我不会扣大家工资
+	//数组增删操作：unshift/shift/pop/push （字符串没有）
+		/*
+			var a = ["a","b","c","d"];
+			console.log("a.unshift: " + a.unshift("e")); 
+			console.log("a: " + a);
+			console.log("a.push: " + a.push("f")); 
+			console.log("a: " + a);
+			console.log("a.pop: " + a.pop()); 
+			console.log("a: " + a);
+			console.log("a.shift: " + a.shift());
+			console.log("a: " + a);
+		*/
+
+	// unshift 前面添加返回数组length,ie6是undefined
+	// shift 删除第一个返回删除的值
+	// push 后面添加返回字符串长度
+	// pop 删除最后一个返回删除的值
+	// 总结：删除返回的是删除的值，添加返回的时长度
+	
+	//字符串截取操作：substring/ slice / substr （其中slice可以操作字符串，规格大概和操作字符串类似）
+
+
+	/*
+		var str = "hello world";
+		console.log(str.slice(3));          
+		console.log(str.substring(3));      
+		console.log(str.substr(3));
+
+		console.log(str.slice(3,7));         
+		console.log(str.substring(3,7));
+		console.log(str.substr(3,7));
+	*/
+
+	//”lo world”
+	//”lo world”
+	//”lo world”
+	//”lo w”
+	//”lo w”
+	//”lo worl”
+
+
+	/*
+		var str = "hello world";     
+		console.log(str.substring(-3)); 
+		console.log(str.slice(-3));          
+		console.log(str.substr(-3));
+	    
+		console.log(str.substring(3,-4)); 
+		console.log(str.slice(3,-4));        
+		console.log(str.substr(3,-4));  
+	*/
+
+	//”hello world”
+	//”rld”
+	//”rld”
+
+	//”hel”
+	//”lo w”
+	//""
+
+
+	/*
+		substring(start,stop): 
+			start从0开始 
+			stop(不包含stop)结束(没有stop就直接结尾了) 不接受负的参数。
+	*/
+
+	/*
+		slice(start, end) 
+			start 要抽取的片断的起始下标。如果是负数，则该参数规定的是从字符串的尾部开始算起的位置。也就是说，-1 指字符串的最后一个字符，-2 指倒数第二个字符，以此类推。
+			end 紧接着要抽取的片段的结尾的下标。
+				若未指定此参数，则要提取的子串包括 start 到原字符串结尾的字符串。
+				如果该参数是负数，那么它规定的是从字符串的尾部开始算起的位置。 (疑问？没有疑问)
+				http://www.w3school.com.cn/jsref/jsref_slice_array.asp
+			返回新的字符串包括字符串 stringObject 从 start 开始（包括 start）到 end 结束（不包括 end）为止的所有字符
+			参数是不是一定要有？http://www.w3school.com.cn/jsref/jsref_slice_array.asp（还真未必）
+	*/
+	/*
+		substr(start, length) 
+			start  必需。要抽取的子串的起始下标。必须是数值。如果是负数，那么该参数声明从字符串的尾部开始算起的位置。也就是说，-1 指字符串中最后一个字符，-2 指倒数第二个字符，以此类推。
+			length 可选。子串中的字符数。必须是数值。如果省略了该参数，那么返回从 stringObject 的开始位置到结尾的字串。
+	*/
+
+	// 只有slice可以操作数组
+	/*var str = ["a","b","c","d","e","f","g","h","i","j"];     
+	console.log(str.substring(-3)); 
+	console.log(str.slice(-3));          
+	console.log(str.substr(-3));
+	   
+	console.log(str.substring(3,-1)); 
+	console.log(str.slice(3,-1));        
+	console.log(str.substr(3,-1)); */
+
+	// slice还有哪些的功效？ (伪数组转数组的方法)
+	// https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
+	// Array.prototype.slice.call(fakeArray)
+	/*
+		var _toArray = function (){
+			console.log(arguments)
+			arguments = [].slice.call(arguments);
+			console.log(arguments);
+		};
+
+		_toArray(1,2);
+	*/
+	// ie9以下是不支持的，所以要改造一下方法
+	/*
+		var _toArray = function (obj){
+			var ne = [];
+			var _slice = Array.prototype.slice;
+
+			try{
+				ne = _slice.call(obj);
+			}catch(e){
+				// for( var i=0; j = obj[i++] ){
+				for( var i=0; i <obj.length; i ++){
+					ne.push(obj[i]);
+				}
+			}
+
+			return re;
+		}
+	*/
+
+
+	// 为什么slice可以转换？
+	
+		/*
+		var a = [4,5,6];
+		b = a.slice();
+		console.log(a);
+		console.log(b);
+		a.push(7);
+		console.log(a);
+		console.log(b);
+		*/
+		
+		//引用类型的
+		/*
+		var a = [4,5,6];
+		b = a;
+		console.log(a);
+		console.log(b);
+		a.push(7);
+		console.log(a);
+		console.log(b);
+		*/
+
+
+	// 什么是伪数组？有哪些伪数组？：arguments/nodelist/$()/HTMLCollection
+	// 说的浅显一些，就是：存在着length属性，可以通过数组下标的方式进行每个元素的访问，但是不能够使用push等数组的方法。
+	/*var fakeArray = { "0":"a", "1":"b", length:2};
+	fakeArray = [].slice.call(fakeArray);
+	console.log(fakeArray);*/
+
+	// 除了slice还有没有别的方法？还有3种方法 见 fakeArray.html
+
+	// charAt/ charCodeAt/ indeOf/ lastIndexOf
+	/*var str = "abcdfasfasf";
+	console.log(str.charAt(4));
+	console.log("b".charCodeAt());*/
+
+	/*for(var i = 0; i< 100000; i++){
+		document.write(String.fromCharCode(i));
+	};*/
+
+	/*var ccc = "";
+	for(var i = 0; i< 100000; i++){
+		ccc += String.fromCharCode(i);
+	};
+	document.write(ccc); */
+	// 知道你操作dom的昂贵？
+
+	// charCodeAt——获取指定位置字符的编码，
+	// charAt ——获取指定位置的字符 ，返回该字符
+	// String.fromCharCode 把编码转换成字符（静态方法）
+
+
+	// indexOf /lastIndexOf / search的区别？
+	// 两者都可以操作字符串，与slice相同,concat;
+	// search 支持正则
+	var str = "acdefgabc";
+	// str = str.split("");
+	console.log(str);
+	console.log(str.indexOf("a"));
+	console.log(str.indexOf("h"));
+	console.log(str.lastIndexOf("a"));
+	console.log(str.lastIndexOf("h"));
+	console.log(str.indexOf("a",3));
+	console.log(str.search("d"));
+	console.log(str.search(/d/g));
+	
+
+	// 0 -1 6 -1 6
+	// indexOf，查找指定字符在字符串第一次出现的位置，后面的不找了。
+	// lastIndexOf，查找指定字符在字符串最后一次出现的位置，后面的不找了。
+
+
+	//trim，去除文本框输入内容的首尾空格，中间空格保留。
+	//str.toUpperCase(),不支持参数，所以不支持把某一个转换而是全部转换。
+	//str.toLowerCase(),不支持参数，所以不支持把某一个转换而是全部转换。
+
+	// 实现一下 trim (ie9以下不支持)；
+	/*
+	String.prototype._trim = function (){
+		return this.replace(/^\s+|\s+$/g,"");
+	}
+	var d = "   adc  ddd "._trim();
+	console.log(d);
+	console.log(d.length);
+	console.log("  123 56".trim());
+	*/
+
+
+	//测试1：字符串相加(keng)
+	/*
+	var str = "hello";
+	for(var i=0; i<10; i++){
+		var str = 'hello' + i*2 +i;
+	};
+	console.log(str);
+	*/
+	// hello189;
+
+
+	//字符串：split /join
+
+    //1.判断一个单词或者一个字符串是否是回文？（调换位置或颠倒过来，产生首尾回环的情趣，叫做回文，也叫回环）
+    /*var str = "abcdcba";
+    String.prototype.checkPalindrom = function (){
+    	return this == this.split("").reverse().join("");
+    };
+    console.log(str.checkPalindrom());*/
+
+
+    // forEach 的实现
+    /*var a = [1,4,5,2,10];
+    Array.prototype._forEach = function (callback){
+    	for( var i = 0; i< this.length; i++){
+    		// console.log( "body：" + this[i] + "index:" + i +  "this:" + this)
+    		callback(this[i], i, this)
+    	}
+    };
+    a._forEach(function(a,b,c){
+    	console.log(a,b,c)
+    });*/
+
+
+    // ----------------------------与算法相关的运算-----------------------------
+	//如何进行数组的排序？（a-b 默认升序）
+	// 对数组数字排序和字母排序是不一样的
+	/*
+	var arr = [5,2,4,1,10];
+	//var arr = ["smith", "james", 'ma jack', 'lili'];
+	arr.sort(function(a,b){
+		console.log("a: " + a );
+		console.log("b: " + b );
+		return a - b;
+	});
+	console.log(arr);
+	*/
+	// console.log(arr.sort());
+
+	// sort() 方法在适当的位置对数组的元素进行排序，并返回数组。 sort 排序不一定是稳定的。默认排序顺序是根据字符串Unicode码点。
+ 	// 按首字母排序不能传参数
+ 	// https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+
+
+
+
+	//测试二：数组去重
+	//(indexOf() 方法可返回某个指定的字符串值在字符串中首次出现的位置。如果要检索的字符串值没有出现，则该方法返回 -1。)
+	/*var arr = [1,2,3,1,33,22,3];
+
+	Array.prototype.unique3 = function (){ // 新起变量，用开关来判断
+		var n = [], m = {};
+
+		for(var i=0; i<this.length; i++){
+			if(!m[this[i]]){
+				n.push(this[i]);
+				m[this[i]] = true;
+			};
+		};
+
+		return n;
+	};
+
+	Array.prototype.unique2 = function (){ //  把不相同的放到一个新的数组 newarr.indexOf() 查重
+		var n = [];
+
+		for(var i=0; i<this.length; i++){
+			if(n.indexOf(this[i]) == -1){
+				n.push(this[i]);
+			};
+		};
+
+		return n;
+	};
+
+	Array.prototype.unique3 = function (){ // arr.indexOf() 重复的子项与indexOf的索引与他的本身的索引不相等
+		var n = [this[0]];
+
+		for(var i=1; i<this.length; i++){
+			if(this.indexOf(this[i]) == i){
+				n.push(this[i]);
+			};
+		};
+
+		return n;
+	};
+
+	arr = arr.unique3();
+	console.log(arr);*/
+
+
+	//怎么把数组的第一个放到最前面？
+	/*
+	var b = ["a","b","c","d"];
+	console.log(b.push(b.shift()));
+	console.log(b);
+	*/
+
+	//循环方法之：forEach 原生实现？
+	/*var b = ["a","b","c","d"];
+	b.forEach(function(e,a1,a2){
+		console.log(this);
+		console.log(e)
+		console.log(a1)
+		console.log(a2)
+	},b);*/
+
+	/*if(!Array.prototype.forEachTest){
+		Array.prototype.forEachTest = function(callback, arg){
+			if(!this){
+				throw new TypeError("this is null or not defined");
+			};
+
+			if(typeof callback != 'function'){
+				throw new TypeError( callback + "is not a function")
+			};
+
+			var O = Object(this);
+			var len = O.length;
+			var K = 0;
+			var V = null;
+			while( K < len){
+				if(K in O){
+					V = O[K];
+					callback.call(arg, V, K, O);
+				}
+				K++;
+			}
+		}
+	}
+
+	b.forEachTest(function(e,a1,a2){
+		console.log(this);
+		console.log(e)
+		console.log(a1)
+		console.log(a2)
+	}, b);*/
+
+	// call apply区别？
+
+	//递归：
+	// 阶乘
+	/*function test(n){
+        if(n<=2)return n;
+        return test(n-1)+test(n-2);
+   	}
+    var v = test(10);
+    console.log(v);
+  	*/
+
+
+    // 2.检测字符串中重复字符最多得时哪一个？
+
+    //var str = "aaabbccccccccddddddee";
+    //思路：把每一个字符串个数先算出来，然后个数的大小
+
+    /*String.prototype.findMaxDuplicateChar = function(){
+    	var k = {};
+    	for( var i=0; i < this.length ; i ++){
+
+    		if(!k[this.charAt(i)]){
+    			k[this.charAt(i)] = 1;
+    		}else{
+    			k[this.charAt(i)] += 1;
+    		}
+    	};
+    	var maxChar = "";
+    	var maxValue = 1;
+    	for( v in k){
+    		if(k[v] > maxValue){
+    			maxChar = v;
+    			maxValue = k[v];
+    		}
+    	};
+
+    	return "出现字符最多的时：" + maxChar + " 一共出现了：" + maxValue + "次";
+    }
+
+    console.log(str.findMaxDuplicateChar());*/
+
+
+    //3.如何获取 1-100 50个随机数
+    /*
+    var getNum = function(x,y,n){
+    	debugger;
+    	var arr = [];
+    	var J = {};
+    	if(!x || !y || !n)return;
+    	while( arr.length < n){
+    		var num = Math.round(Math.random()*(y-x) + x);
+    		if(!J.num){
+    			arr.push(num);
+    			J[num] = !J[num];
+    		};
+    		arr = arr.sort(function(a,b){return a-b;})
+    	}
+    	return arr;
+    }
+    
+    console.log(getNum(1,100,50));
+    */
+
+
+
+</script>
+</body>
+</html>

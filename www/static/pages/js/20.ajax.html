@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<script type="text/javascript">
+	
+	var ajax = function (option){
+		option = option || {};
+
+		let method = (option.method || 'GET').method.toUpperCase || 'GET',
+			url = option.url || '',
+			async = option.async || true,
+			data = option.data || null,
+			success = option.success || function (){},
+			fail = option.fail || function (){},
+			xhr = XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
+		let  params = [];
+		for( let key in data){
+			params.push(key + '=' + data[key]);
+		};
+
+		var paramsStr = params.join('&');
+
+		if(method == 'POST'){
+			xhr.open(method, url, async);
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=utf-8');
+			xhr.send(paramsStr);
+		}else{
+			xhr.open(method, url + '?' + paramsStr, async);
+			xhr.send(null);
+		};
+
+		xhr.onreadystatechange = function (){
+			if(xhr.readyState == 4 ){
+				if(xhr.status == 200){
+					success(xhr.responseText);
+				}else{
+					fail({status:xhr.status, msg:"出错了~"})
+				}
+			}
+		}
+
+	}
+
+	ajax({
+		method:'POST',
+		url:"api/a/b",
+		data:{},
+		success: function(response){
+			//
+
+		}	
+	})
+</script>
+</body>
+</html>

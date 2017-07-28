@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		html,body{
+			margin: 0;
+		}
+		#test1{
+		 	position: relative;
+		 	left:300px;
+		 	top:100px;
+		 	width: 200px;
+		 	height: 50px;
+		 	padding: 10px;
+		 	margin:3px;
+		 	border:1px solid red;
+		 	background: #ccc;
+		 	color:#fff;
+		}
+	</style>
+</head>
+<body>
+<!-- 这是测试节点的demo1 -->
+	<div id="test1" class="test_class" data-ss =" xiaoming">
+		<div id="test_inner1" class="xx">我试test1的内容</div>
+		<div id="test_inner2"  class="xx">fafa</div>
+		<div id="test_inner3" class="yy">fafa</div>
+	</div>
+<!-- 这是测试节点的demo2 -->
+	<a id="test2" href="/test/test2/test.html">我试test2的内容</a>
+<!-- 这是测试节点的demo3 -->
+	<div id="test2">我试test3的内容</div>
+
+<script type="text/javascript">
+
+	var t1 = document.getElementById("test1");
+	var t2 = document.getElementById("test2");
+	var i1 = document.getElementById("test_inner1");
+
+	// 开胃菜
+	//不借助临时变量，进行两个整数的交换
+
+	/*let a = 2;
+	let b = 9;
+
+	console.log("a: " + a);
+	console.log("b: " + b);
+
+	let c ;
+	c = a;
+	a = b;
+	b = c;
+	
+	b = b - a;
+	a = a + b;
+	b = a - b;
+
+	console.log("a: " + a);
+	console.log("b: " + b);*/
+
+	var getRandomNum = function (x,y,num){
+		var a = [];
+		for( var i = 0; i < num; i++){
+			a.push(Math.round(Math.random()*(y-x) +x));
+		};
+		return a;
+	};
+
+	var testFunAbility =  function(fun){
+		var t1 = new Date();
+		fun&&fun(arr);
+		var t2 = new Date();
+		console.log( t2 - t1);
+		console.log(arr);
+	};
+
+	// 没有那么高大上，其实大家也一直在用
+	var arr = getRandomNum(1,100,1000);
+	//console.log(arr);
+	// 原生排序
+	var yuansheng = function(){
+		arr = arr.sort(function(a,b){return b-a;});
+	};
+
+	//睡眠排序法
+
+	var arr = [1,4,8,2,1,18];
+	var newArr = [];
+	var sleepSort = function(){
+		arr.forEach(function(d){
+			setTimeout(function(){
+				newArr.push(d);
+				if(newArr.length == arr.length){
+					//newArr.reverse();
+					console.log(newArr);
+				};
+			},d);
+		})
+	};
+	sleepSort();
+
+	// 冒泡排序算法
+	var bubbleSort =  function (arr){
+		//debugger;
+		if( arr.length <= 1) return arr;
+
+		for( let i = 0, l = arr.length; i < l; i++){
+
+			for( let j = i+1; j < l; j ++){
+				if(arr[i] > arr[j]){
+					let temp = arr[i];
+					arr[i] = arr[j];
+					arr[j] = temp;
+				}
+			}
+		}
+		return arr;
+	};
+
+	// 快速排序算法(先了解递归)Maximum call stack size exceeded
+	var quickSort = function (arr){
+		debugger;
+		if(arr.length <=  1) return arr;
+		var leftArr = [];
+		var rightArr = [];
+		var tempArr = arr[0];
+		for( var i=1,len = arr.length; i<len; i++){
+			if(arr[i] > tempArr){
+				rightArr.push(arr[i]);
+			}else{
+				leftArr.push(arr[i]);
+			};
+		};
+		return [].concat(quickSort(leftArr), [tempArr], quickSort(rightArr));
+	};
+
+	//arr = quickSort(arr)
+	//console.log(quickSort(arr));
+
+	//testFunAbility( yuansheng); //不止快一倍
+	//testFunAbility( bubbleSort);
+	//testFunAbility( quickSort); //速度比冒泡快一倍
+
+	//插入排序
+	/*var insertSort =  function (){
+		for( var i = 1; i < arr.length ; i++){
+			if( arr[i] < arr [i-1]){
+				var temp = arr[i];
+				var j = i-1;
+				arr[i] = arr[j];
+			}
+		}
+	}*/
+
+	//希尔排序
+
+	// 3.找出数组的最小最大的差值
+	//方法1
+	//var arr2 = [10,5,11,7,8,9];
+	/*var max = Math.max.apply(null,arr2);
+	var min = Math.min.apply(null,arr2);
+	console.log("max: " + max);
+	console.log("min: " + min);*/
+	// 方法2
+	// 设置一个最大
+	/*var min = arr2[0];
+	var	detal = 0;
+	arr2.forEach( function (a){
+		min = Math.min(a, min);
+
+		let tempDetal = a - min;
+
+		detal =  Math.max(detal, tempDetal);
+	});
+	console.log(detal);*/
+
+	// 实现类似getElementsByClassName 的功能
+	// 第一步把node底下所有节点拿到；第二部用正则去匹配name符合的节点并把他存起来，然后返回集合
+	var getElementByClass =  function(node, name){
+		var ele = node.getElementsByTagName("*");
+		var len = ele.length;
+		var start = '(^|[\n\r\t\f])';
+		var end = '([\n\r\t\f]|$)';
+		var re = new RegExp(start + name + end);
+		var target = [];
+		ele = [].slice.call(ele);
+		ele.forEach(function(d){
+			if(re.test(d.className)){
+				target.push(d)
+			};
+		});
+		return target;
+	};
+
+	//var aa = getElementByClass(document.getElementById("test1"), "xx");
+	//console.log(aa);
+
+	// 验证码生产
+	var getCaptcha =  function (n){
+		var str = "abcdefghijklmnopqrstuvwxyz0123456789";
+		var temp = "";
+		for( let i=0; i<n; i++){
+			temp += str.charAt(Math.round(Math.random()*str.length))
+		};
+		return temp;
+	};
+	console.log(getCaptcha(4));
+
+	// 十进制转换二进制
+
+	function decimalToBinary (d){
+		if(d >=1){
+
+			if(d % 2 ){
+				return decimalToBinary((d - 1)/2) + 1;
+			}else{
+				return decimalToBinary(d/2) + 0;
+			}
+		}else{
+
+			return "";
+		}
+	};
+
+	console.log(decimalToBinary(8));
+
+
+</script>
+</body>
+</html>

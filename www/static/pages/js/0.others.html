@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	html,body{
+		margin: 0;
+	}
+	 #test1{
+	 	position: relative;
+	 	left:300px;
+	 	top:100px;
+	 	width: 200px;
+	 	height: 50px;
+	 	padding: 10px;
+	 	margin:3px;
+	 	border:1px solid red;
+	 	background: #ccc;
+	 	color:#fff;
+	}
+	</style>
+</head>
+<body>
+<!-- 这是测试节点的demo1 -->
+	<div id="test1" class="test_class" data-ss =" xiaoming">
+		<div id="test_inner1">我试test1的内容</div>
+		<div id="test_inner2">fafa</div>
+	</div>
+<!-- 这是测试节点的demo2 -->
+	<a id="test2" href="/test/test2/test.html">我试test2的内容</a>
+<!-- 这是测试节点的demo3 -->
+	<div id="test2">我试test3的内容</div>
+
+<script type="text/javascript">
+
+	var t1 = document.getElementById("test1");
+	var t2 = document.getElementById("test2");
+	var i1 = document.getElementById("test_inner1");
+
+	// 创建一个对象和 普通函数的调用（得到返回值）
+	var x = new Boolean(false);
+	if(x) console.log('hi'+ x);
+
+	var y = Boolean(0);
+	if(y) console.log('hello' + y);
+	
+	//讲讲前端模块化
+	//栈和堆的区别
+	//tcp/UDP区别
+	//web应用中服务器主动向客户端推送Data的方式有哪些？
+	// h5 websoket  /websoket flash/ xhr长连接/ xhr mltipart streaming/ 不可见的iframe / script标签长时间链接（可跨域）
+
+
+	//function内，var a = b = 1; b 为什么会是全局变量？
+	//var a=b=1;计算优先级 创建全局变量b=1，再在函数中定义一个变量a，a=b
+
+	// 前端安全 XSS/CSRF
+		// 防御XSS攻击可以通过以下两方面操作： 
+		// 1，对用户表单输入的数据进行过滤，对javascript代码进行转义，然后再存入数据库； 
+		// 2，在信息的展示页面，也要进行转义，防止javascript在页面上执行。
+
+		// CSRF攻击的防御可以通过以下两方面操作： 
+		// 1，所有需要用户登录之后才能执行的操作属于重要操作，这些操作传递参数应该使用post方式，更加安全； 
+		// 2，为防止跨站请求伪造，我们在某次请求的时候都要带上一个csrf_token参数，用于标识请求来源是否合法，csrf_token参数由系统生成，存储在SESSION中。
+
+	// TCP/IP/HTTP/HTTP2.0/HTTPS
+
+	// 跨域问题的解决方案？
+
+	// 工作中有没有遇到不好解决的问题？
+		// 需求变更 告诉你是这样，然后是这样
+		// 单纯前端技术上得问题，一般是还比较好解决，
+		// 目前可能是部署服务器，运维上面的问题，服务器迁移
+		// 
+
+	// 敲下URL后发生了什么？
+	/*
+		1.输入URL后，浏览器向服务器发起了一个请求，传输了一些数据。
+			键盘处理器 => 操作系统判断是不是系统指令不是的话 => 应用程序来分析 =>
+			浏览器解析URL并找到ip(DNS查询) => Socket API 发生数据（可以选择tcp/ip协议) => 
+			WIFI/蜂窝数据网络/以太网
+			
+			URL简介
+				传送协议
+				服务器（通常为域名，由时为IP地址）
+				端口号（比如“:80”）
+				路径
+				查询
+
+			DNS（Domain Name System，域名系统）查询
+			查询浏览器缓存/查询系统缓存/路由器或 ISP 的缓存 DNS 服务器 =>最后得到目标域名的IP地址
+				
+
+			TCP和UDP
+			面向非连接的协议/是基于连接的协议
+
+			可能还会先经过负责负载均衡的机器，其目的为将请求合理地分配到多个服务器上，有很多实现方式，比如LVS，反向代理等
+
+
+		2.服务器接收到请求后，作出了相应的处理，然后返回数据到浏览器。
+
+		3.浏览器再做相应的处理，最后将页面展现在我们面前。
+			http://blog.csdn.net/yuhk231/article/details/53581212
+			1.解析HTML文件，创建DOM树
+				自上而下，遇到任何样式（link、style）与脚本（script）都会阻塞（外部样式不阻塞后续外部脚本的加载）。
+			2.解析CSS
+				优先级：浏览器默认设置<用户设置<外部样式<内联样式<HTML中的style样式；
+				特定级：id数*100+类或伪类数*10+tag名称*1
+			3.将CSS与DOM合并，构建渲染树（renderingtree）
+				DOM树与HTML一一对应，渲染树会忽略诸如head、display:none的元素
+			4.布局和绘制，重绘（repaint）和重排（reflow）
+				重排：若渲染树的一部分更新，且尺寸变化，就会发生重排；
+				重绘：部分节点需要更新，但不改变其他集合形状。如改变某个元素的颜色，就会发生重绘。
+			附：
+			 1.重绘和重排何时会发生：
+			 （1）增加或删除DOM节点；
+			 （2）display:none（重排并重绘）；visibility:hidden（重绘）；
+			 （3）移动页面中的元素；
+			 （4）增加或修改样式；
+			 （5）用户改变窗口大小，滚动页面等。
+			 2.如何减少重绘和重排以提升页面性能：
+			 （1）不要一个个修改属性，应通过一个class来修改
+				 错误写法：div.style.width="50px";div.style.top="60px";
+				 正确写法：div.className+=" modify";
+			 （2）clone节点，在副本中修改，然后直接替换当前的节点；
+			 （3）若要频繁获取计算后的样式，请暂存起来；
+			 （4）降低受影响的节点：在页面顶部插入节点将影响后续所有节点。而绝对定位的元素改变会影响较少的元素；
+			 （5）批量添加DOM：多个DOM插入或修改，应组成一个长的字符串后一次性放入DOM。使用innerHTML永远比DOM操作快。（特别注意：innerHTML不会执行字符串中的嵌入脚本，因此不会产生XSS漏洞）
+			 （6） 事先写好图片的宽高
+		4.
+
+
+	*/
+
+
+</script>
+</body>
+</html>

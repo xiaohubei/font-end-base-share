@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<script type="text/javascript">
+	
+	/*
+		(function(){
+		(21 , 94) 定义了一些变量和函数 jQuery = function(){};
+		(96 , 283) 给JQ对象，添加一些方法和属性
+		(285 , 347) extend : JQ的继承方法
+		(349 , 870) jQuery.extend() : 扩展一些工具方法
+		(877 , 2856)  Sizzle : 复杂选择器的实现
+		(2880 , 3042) Callbacks : 回调对象 : 对函数的统一管理
+		(3043 , 3183) Deferred : 延迟对象 : 对异步的统一管理
+		(3184 , 3295) support : 功能检测
+		(3308 , 3652) data() : 数据缓存
+		(3653 , 3797) queue() : 队列方法 : 执行顺序的管理
+		(3803 , 4299) attr() prop() val() addClass()等 : 对元素属性的操作
+		(4300 , 5128) on() trigger() : 事件操作的相关方法
+		(5140 , 6057) DOM操作 : 添加 删除 获取 包装 DOM筛选
+		(6058 , 6620) css() : 样式的操作
+		(6621 , 7854) 提交的数据和ajax() : ajax() load() getJSON()
+		(7855 , 8584) animate() : 运动的方法
+		(8585 , 8792) offset() : 位置和尺寸的方法
+		(8804 , 8821) JQ支持模块化的模式
+		(8826)  window.jQuery = window.$ = jQuery;
+		})();
+	*/
+
+	//---------- 一：整体剖析 ----------
+
+	(function(global, factory){
+
+		//jsDom nodejs
+		factory(global);
+
+		//思考： 为什么global 不传入 noGlobal 为undefined？
+		//答：早起 pre-es5 和 ie8 undefined 仅仅是一个变量可以被覆盖, 控制台试一试
+		//代码压缩策略：可以把noGlobal 和 window 压缩成变量，减少查找时间？
+	})(window, function (window, noGlobal){
+
+		//正真的内容
+	});
+
+	//----------二：无new构造 （如何实现？）----------
+	//操作dom是昂贵的
+	//$("#test").val();
+
+	//实例化jquery实际上是 调用其拓展的原型方法 ,jquery.fn.init(); 也叫jquery的构造器
+
+	/*
+	(function(window, undefined) {
+	    var
+	    // ...
+	    jQuery = function(selector, context) {
+	        // The jQuery object is actually just the init constructor 'enhanced'
+	        // 看这里，实例化方法 jQuery() 实际上是调用了其拓展的原型方法 jQuery.fn.init
+	        return new jQuery.fn.init(selector, context, rootjQuery);
+	    },
+	 
+	    // jQuery.prototype 即是 jQuery 的原型，挂载在上面的方法，即可让所有生成的 jQuery 对象使用
+	    jQuery.fn = jQuery.prototype = {
+	        // 实例化化方法，这个方法可以称作 jQuery 对象构造器
+	        init: function(selector, context, rootjQuery) {
+	            // ...
+	        }
+	    }
+	    // 这一句很关键，也很绕
+	    // jQuery 没有使用 new 运算符将 jQuery 实例化，而是直接调用其函数
+	    // 要实现这样,那么 jQuery 就要看成一个类，且返回一个正确的实例
+	    // 且实例还要能正确访问 jQuery 类原型上的属性与方法
+	    // jQuery 的方式是通过原型传递解决问题，把 jQuery 的原型传递给jQuery.prototype.init.prototype
+	    // 所以通过这个方法生成的实例 this 所指向的仍然是 jQuery.fn，所以能正确访问 jQuery 类原型上的属性与方法
+	    jQuery.fn.init.prototype = jQuery.fn;
+	 
+	})(window);
+
+	大部分人初看 jQuery.fn.init.prototype = jQuery.fn 这一句都会被卡主，很是不解。但是这句真的算是 jQuery 的绝妙之处。理解这几句很重要，分点解析一下：
+
+	1）首先要明确，使用 $('xxx') 这种实例化方式，其内部调用的是 return new jQuery.fn.init(selector, context, rootjQuery) 这一句话，也就是构造实例是交给了 jQuery.fn.init() 方法去完成。
+
+	2）将 jQuery.fn.init 的 prototype 属性设置为 jQuery.fn，那么使用 new jQuery.fn.init() 生成的对象的原型对象就是 jQuery.fn ，所以挂载到 jQuery.fn 上面的函数就相当于挂载到 jQuery.fn.init() 生成的 jQuery 对象上，所有使用 new jQuery.fn.init() 生成的对象也能够访问到 jQuery.fn 上的所有原型方法。
+
+	3）也就是实例化方法存在这么一个关系链  
+
+	jQuery.fn.init.prototype = jQuery.fn = jQuery.prototype ;
+	new jQuery.fn.init() 相当于 new jQuery() ;
+	jQuery() 返回的是 new jQuery.fn.init()，而 var obj = new jQuery()，所以这 2 者是相当的，所以我们可以无 new 实例化 jQuery 对象。
+	*/
+
+	//----------三：方法的重载？有多少种----------
+	/*// 接受一个字符串，其中包含了用于匹配元素集合的 CSS 选择器
+		jQuery([selector,[context]])
+		// 传入单个 DOM
+		jQuery(element)
+		// 传入 DOM 数组
+		jQuery(elementArray)
+		// 传入 JS 对象
+		jQuery(object)
+		// 传入 jQuery 对象
+		jQuery(jQuery object)
+		// 传入原始 HTML 的字符串来创建 DOM 元素
+		jQuery(html,[ownerDocument])
+		jQuery(html,[attributes])
+		// 传入空参数
+		jQuery()
+		// 绑定一个在 DOM 文档载入完成后执行的函数
+		jQuery(callback)
+	*/
+
+	//所以不要太执着于一些边角料
+
+	//----------四：jquery.extend/jquery.fn.extend的区别？----------
+
+	/*1）jQuery.extend(object) 为扩展 jQuery 类本身，为类添加新的静态方法；
+
+	2）jQuery.fn.extend(object) 给 jQuery 对象添加实例方法，也就是通过这个 extend 添加的新方法，实例化的 jQuery 对象都能使用，因为它是挂载在 jQuery.fn 上的方法（上文有提到，jQuery.fn = jQuery.prototype ）。 
+
+	它们的官方解释是：
+
+	1）jQuery.extend(): 把两个或者更多的对象合并到第一个当中，
+
+	2）jQuery.fn.extend()：把对象挂载到 jQuery 的 prototype 属性，来扩展一个新的 jQuery 实例方法。
+
+	也就是说，使用 jQuery.extend() 拓展的静态方法，我们可以直接使用 $.xxx 进行调用（xxx是拓展的方法名），
+
+	而使用 jQuery.fn.extend() 拓展的实例方法，需要使用 $().xxx 调用。*/
+
+	//至于的具体实现，大家可以自己去看，看不懂，一起交流~
+
+
+	//------------五：jquery的链式调用及回溯？----------
+
+	// 什么是回溯？ 内部实现（prevObject）
+
+	//$('div').eq(0).show().end().eq(1).hide();
+	//this.pushStack:增栈;
+
+	/*jQuery.fn = jQuery.prototype = {
+	    // 将一个 DOM 元素集合加入到 jQuery 栈
+	    // 此方法在 jQuery 的 DOM 操作中被频繁的使用, 如在 parent(), find(), filter() 中
+	    // pushStack() 方法通过改变一个 jQuery 对象的 prevObject 属性来跟踪链式调用中前一个方法返回的 DOM 结果集合
+	    // 当我们在链式调用 end() 方法后, 内部就返回当前 jQuery 对象的 prevObject 属性
+	    pushStack: function(elems) {
+	        // 构建一个新的jQuery对象，无参的 this.constructor()，只是返回引用this
+	        // jQuery.merge 把 elems 节点合并到新的 jQuery 对象
+	        // this.constructor 就是 jQuery 的构造函数 jQuery.fn.init，所以 this.constructor() 返回一个 jQuery 对象
+	        // 由于 jQuery.merge 函数返回的对象是第二个函数附加到第一个上面，所以 ret 也是一个 jQuery 对象，这里可以解释为什么 pushStack 出入的 DOM 对象也可以用 CSS 方法进行操作
+	        var ret = jQuery.merge(this.constructor(), elems);
+	 
+	        // 给返回的新 jQuery 对象添加属性 prevObject
+	        // 所以也就是为什么通过 prevObject 能取到上一个合集的引用了
+	        ret.prevObject = this;
+	        ret.context = this.context;
+	 
+	        // Return the newly-formed element set
+	        return ret;
+	    },
+	    // 回溯链式调用的上一个对象
+	    end: function() {
+	        // 回溯的关键是返回 prevObject 属性
+	        // 而 prevObject 属性保存了上一步操作的 jQuery 对象集合
+	        return this.prevObject || this.constructor(null);
+	    },
+	    // 取当前 jQuery 对象的第 i 个
+	    eq: function(i) {
+	        // jQuery 对象集合的长度
+	        var len = this.length,
+	            j = +i + (i < 0 ? len : 0);
+	 
+	        // 利用 pushStack 返回
+	        return this.pushStack(j >= 0 && j < len ? [this[j]] : []);
+	    }, 
+	}*/
+
+	//参数映射及处理：jQuery 的接口连贯性还体现在了对参数的兼容处理上，方法如何接收数据比让它们具有可链性更为重要。虽然方法的链式调用是非常普遍的，你可以很容易地在你的代码中实现，但是处理参数却不同，使用者可能传入各种奇怪的参数类型，而 jQuery 作者想的真的很周到，考虑了用户的多种使用场景，提供了多种对参数的处理。
+	// 传入键值对
+	/*jQuery("#some-selector")
+	  .css("background", "red")
+	  .css("color", "white")
+	  .css("font-weight", "bold")
+	  .css("padding", 10);*/
+	 
+	// 传入 JSON 对象
+	/*jQuery("#some-selector").css({
+	  "background" : "red",
+	  "color" : "white",
+	  "font-weight" : "bold",
+	  "padding" : 10
+	});*/
+	//jQuery 的 on() 方法可以注册事件处理器。和 CSS() 一样它也可以接收一组映射格式的事件，但更进一步地，它允许单一处理器可以被多个事件注册：
+
+	// binding events by passing a map
+	/*jQuery("#some-selector").on({
+	  "click" : myClickHandler,
+	  "keyup" : myKeyupHandler,
+	  "change" : myChangeHandler
+	});*/
+	 
+	// binding a handler to multiple events:
+	//jQuery("#some-selector").on("click keyup change", myEventHandler);
+
+	/*总的来说，
+
+	1）end() 方法返回 prevObject 属性，这个属性记录了上一步操作的 jQuery 对象合集；
+
+	2）而 prevObject 属性由 pushStack() 方法生成，该方法将一个 DOM 元素集合加入到 jQuery 内部管理的一个栈中，通过改变 jQuery 对象的 prevObject 属性来跟踪链式调用中前一个方法返回的 DOM 结果集合
+
+	3）当我们在链式调用 end() 方法后，内部就返回当前 jQuery 对象的 prevObject 属性，完成回溯。*/
+
+
+	//------------六：jQuery 正则与细节优化----------
+
+	/*不得不提 jQuery 在细节优化上做的很好。也存在很多值得学习的小技巧，下一篇将会以 jQuery 中的一些编程技巧为主题行文，这里就不再赘述。
+
+	然后想谈谈正则表达式，jQuery 当中用了大量的正则表达式，我觉得如果研读 jQuery ，正则水平一定能够大大提升，如果是个正则小白，我建议在阅读之前先去了解以下几点：
+
+	1）了解并尝试使用 Javascript 正则相关 API，包括了 test() 、replace() 、match() 、exec() 的用法；
+
+	2）区分上面 4 个方法，哪个是 RegExp 对象方法，哪个是 String 对象方法；
+
+	3）了解简单的零宽断言，了解什么是匹配但是不捕获以及匹配并且捕获。*/
+
+	
+
+	//------------七：jQuery 变量冲突处理----------
+
+	
+
+
+</script>
+</body>
+</html>

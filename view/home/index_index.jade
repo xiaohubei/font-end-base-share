@@ -1,0 +1,42 @@
+doctype html
+html
+    head
+        meta(charset='UTF-8')
+        title Font-End-Base
+        style.
+            *{padding: 0;margin: 0;font-size: 16px;line-height: 20px;font-family: arial;}
+            a, a:visited{color:#337ab7;text-decoration: none; cursor: pointer;margin-right: 20px;}
+            header{padding: 35px 0 35px 0;background-color: #4A6495}
+            h1{font-size: 36px;color:#fff;font-weight: normal;}
+            .content{width: 1000px;margin: auto}
+            .wrap{width: 1000px;margin: auto}
+            .content{margin-top: 80px;}
+            .list{width: 800px;}
+            .list .item{position: relative;padding-left: 70px;margin-top: 50px;}
+            .list .item .step{position: absolute;width: 36px;height: 36px;top:-3px;left:0;border: 5px solid #4A6495;border-radius: 23px;text-align: center;line-height: 36px;}
+            .list .item h2{font-size: 24px;font-weight: normal;}
+            .list .item p,ul{line-height: 30px;margin-top: 10px; word-wrap: break-word;}
+    body
+        header
+            .wrap
+                h1 Font-End-Base-Share By xiaohubei
+        .content
+            .list
+                .item
+                    .step 1
+                    h2 Javascript
+                    ul
+                        each list in js_list
+                            a(href='#{list.href}') #{list.name}
+                .item
+                    .step 2
+                    h2 CSS
+                    ul
+                        each list in css_list
+                            a(href='#{list.href}') #{list.name}
+                .item
+                    .step 3
+                    h2 HTML5
+                    ul
+                        each list in h5_list
+                            a(href='#{list.href}') #{list.name}

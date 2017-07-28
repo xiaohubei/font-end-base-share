@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	html,body{
+		margin: 0;
+	}
+		 #test1{
+		 	position: relative;
+		 	left:300px;
+		 	top:100px;
+		 	width: 200px;
+		 	height: 50px;
+		 	padding: 10px;
+		 	margin:3px;
+		 	border:1px solid red;
+		 	background: #ccc;
+		 	color:#fff;
+		 }
+	</style>
+</head>
+<body>
+<script type="text/javascript" src="jquery-1.11.3.js"></script>
+<!-- 这是测试节点的demo1 -->
+	<div id="test1" class="test_class" data-ss =" xiaoming">
+		<div id="test_inner1">我试test1的内容</div>
+		<div id="test_inner2">fafa</div>
+	</div>
+<!-- 这是测试节点的demo2 -->
+	<a id="test2" href="/test/test2/test.html">我试test2的内容</a>
+<!-- 这是测试节点的demo3 -->
+	<div id="test2">我试test3的内容</div>
+
+<script type="text/javascript">
+
+	var t1 = document.getElementById("test1");
+	var t2 = document.getElementById("test2");
+	var i1 = document.getElementById("test_inner1");
+
+	//window.open("http://www.w3school.com.cn")
+	//document.open()
+
+	/*window.open() : 打开一个新窗口。
+	       第一个参数： 指定要打开的页面地址。
+	       第二个参数： 指定在哪个窗口中打开页面。
+	       第三个参数： 指定新窗口的特征（一旦设置了参数，所有没有明确设置的参数都会被忽略，不会有效果）  有兼容问题。
+	               第三个参数只有在第二个参数为 _blank 的时候才有效。
+	       第四个参数： 是否用新窗口覆盖当前页面的历史记录。
+	               基本上所有浏览器都不允许操作历史记录。
+	window.close() : 关闭当前窗口。   有兼容问题，每个浏览器采取措施都不一样。
+	       firefox : 只允许关闭由 window.open() 方法打开的窗口。
+	       chrome : 允许关闭。
+	       ie : 允许关闭，但是有确认提示。*/
+	//window.open("http://www.baidu.com/");
+	// window.open("http://www.baidu.com/",self, 'width=200,height=100');
+
+	// 搞一搞window.location
+	// 注意：修改window.location.search 的值也会让页面重新加载
+	// ?cc=123&dd=44#ee=12&ff=55
+	var aa = window.location;
+	console.log(aa);  
+	console.log(aa.search);  
+	console.log(aa.hash);  
+	setTimeout(function(){
+		// console.log(111);
+		//window.location.port = 22;
+		//window.location.hostname = 22;
+		//aa.search = "?xiaoming=123&xiaoxiong=345";
+		//aa.hash = "?xiaoming=678&xiaoxiong=111";
+	},1000)
+
+	// 查看window/document 
+	//只有修改hash值不会让页面刷新！！！
+	//修改search会让浏览器刷新
+	//主要注意点：document（特殊之处技术dom又是bom） location Navigator screen
+	
+	
+	// 如何为jquery扩展getUrlParam方法？
+	// 实现一个获取getUrlParam
+	$.extend({
+		getUrlParam: function(name){
+			//debugger;
+			var re = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+			var r = window.location.search.substr(1).match(re);
+			if(r == null )return null;
+			//console.log(r);
+			// 为什么去2，而不是1或者3
+			return decodeURIComponent(r[2]);
+		},
+		_getUrlParam: function (name){
+			var url = window.location;
+			url = decodeURIComponent(url.indexOf ? url : url.toString());
+			var start = url.indexOf("?") + 1;
+			var end = (url.indexOf("#") === -1) ? url.length: url.indexOf("#");
+			var param = url.slice(start, end);
+			var paramArr = param.split('&');
+			var paramObject = {};
+
+			for ( var i=0, len = paramArr.length; i<len; i++){
+				var val = paramArr[i].split("=");
+				paramObject[val[0]] = val[1];
+			}
+			return paramObject[name];
+		}
+	})
+
+	console.log($._getUrlParam("xiaoming"));
+
+	/*var str = "张三: 1000，李四：5000，王五：8000。";
+	var re = /\d+/;
+	var arr = str.match(re);
+	console.log(arr);*/
+
+
+</script>
+</body>
+</html>

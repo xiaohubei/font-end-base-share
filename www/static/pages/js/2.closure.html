@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+
+		// 提问：何为闭包？
+
+		// test1 用途一：外部函数可以读取内部函数的变量
+
+		// 　　function f1(){
+		// 　　　　var n = 999;
+
+		// 	    f3 = function(){
+		// 	   		n+=1
+		// 	   	};
+
+		// 　　　　 function f2(){
+		// 　　　　　　alert(n);
+		// 　　　　 }
+		// 　　　　 return f2;
+		// 　　};
+		// 　　var result=f1();
+
+		// 　　result(); 
+		// 	f3();
+		// 　　result();
+
+		// 用途二：使内部函数的变量一直在内存中
+
+		/*var testMemory = (function() {
+		    var xiaoming = 0;
+		    return function() {
+		        return xiaoming++;
+		    }
+		}());
+		console.log(testMemory());
+		console.log(testMemory());
+		console.log(testMemory());*/
+
+		//test2
+		/*
+		var name = "aaa"; 
+		var object = { 
+			name : "bbb", 
+			getNameFunc : function(){ 
+				return function(){ 
+					return this.name; 
+				};
+			} 
+		}; 
+
+		alert(object.getNameFunc()());
+		*/
+
+		//test3
+		/*var name = "aaa"; 
+		var object = { 
+			name : "bbb", 
+			getNameFunc : function(){ 
+				var that = this;
+				return function(){ 
+					return that.name; 
+				};
+			} 
+		}; 
+
+		alert(object.getNameFunc()());*/
+
+		//test4 变态的闭包
+
+		/*function fun(n,o) {
+		  console.log(o)
+		  return {
+		    fun:function(m){
+		      return fun(m,n);
+		    }
+		  };
+		}*/
+		/*var a = fun(0);
+			a.fun(1);  
+			a.fun(2);  
+			a.fun(3);*/
+
+		//var b = fun(0).fun(1).fun(2).fun(3);
+
+		//var c = fun(0).fun(1);  
+		//	c.fun(2);  
+		//	c.fun(3);
+
+
+
+		//test5 实用的闭包
+
+		/*var makeCounter = function() {
+		  var privateCounter = 0;
+		  function changeBy(val) {
+		    privateCounter += val;
+		  }
+		  return {
+		    increment: function() {
+		      changeBy(1);
+		    },
+		    decrement: function() {
+		      changeBy(-1);
+		    },
+		    value: function() {
+		      return privateCounter;
+		    }
+		  }  
+		};
+
+		var Counter1 = makeCounter();
+		var Counter2 = makeCounter();
+		console.log(Counter1.value()); 
+		Counter1.increment();
+		Counter1.increment();
+		console.log(Counter1.value()); 
+		Counter1.decrement();
+		console.log(Counter1.value()); 
+		console.log(Counter2.value()); */
+
+		// 使用闭包的注意事项？
+		//1.提示，不要再循环中去创建闭包
+		//2.性能的考量：利用原型 prototype
+		// 在jquery浅析里面，我也将说说放在prototype的重要性
+
+		//最后，使用闭包要慎重的
+
+
+		// 性能的考量
+
+		/*function MyObject(name, message) {
+		  this.name = name.toString();
+		  this.message = message.toString();
+		  this.getName = function() {
+		    return this.name;
+		  };
+
+		  this.getMessage = function() {
+		    return this.message;
+		  };
+		}
+		var newobj1=MyObject('x','hello');
+		var newobj2=MyObject('y','javascript');
+		newobj1.getName()==newobj2.getName();*///false
+
+		/*function MyObject(name, message) {
+		  this.name = name.toString();
+		  this.message = message.toString();
+		}
+		MyObject.prototype = {
+		  getName: function() {
+		    return this.name;
+		  },
+		  getMessage: function() {
+		    return this.message;
+		  }
+		};
+		var newobj1=MyObject('x','hello');
+		var newobj2=MyObject('y','javascript');
+		newobj1.getName()==newobj2.getName();*///true
+
+		// 扩展
+		//测试题：太多了，再来一个测试题
+
+		/*
+		var a,b;
+		(function(){
+			console.log(a);
+			console.log(b);
+			var a=b=3;
+			console.log(a);
+			console.log(b);
+		})();
+		console.log(a);
+		console.log(b);
+		*/
+
+		// undefined/undefined/3/3/undefined/3
+
+		/*var a,b;
+		(function(){
+			console.log(a);
+			console.log(b);
+			a=b=3;
+			console.log(a);
+			console.log(b);
+		})();
+		console.log(a);
+		console.log(b);*/
+
+		// undefined/undefined/3/3/3/3
+
+		// 面试题：
+		
+		for (var i = 1; i <= 5; i++) {
+		  setTimeout( function timer() {
+		      console.log(i);
+		  }, 1000 );
+		};
+		
+		// 6*6;
+
+		// 原因就是改变了i的作用域
+		/*
+		for (var i = 1; i <= 5; i++) {
+		    (function(i){
+		        setTimeout( function timer() {
+		              console.log(i);
+		          },  1000 );
+		    })(i);
+		}
+		*/
+		// 12345
+		/*
+		for (let i = 1; i <= 5; i++) {
+		  setTimeout( function timer() {
+		      console.log(i);
+		  }, 1000 );
+		}*/
+
+		// 12345
+
+		// 关于let
+		// for循环的计数器，就很合适使用let命令。
+		// 不存在变量提升
+		// 暂时性死区
+		// 不允许重复声明
+		// 为什么需要块级作用域？
+
+		
+
+	</script>
+</body>
+</html>

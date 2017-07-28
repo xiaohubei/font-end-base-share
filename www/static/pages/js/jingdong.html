@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+		// 无缝滚动
+		// nodejs的并发和qps关系
+		// 文本超出部分用省略号，用js计算
+		// toString()
+		// 代码回滚问题
+		
+		// 智慧供应链和智能预测系统
+		// 冒泡算法
+		var a = [2,5,1,6,10];
+		var _bubbleSort = function (arr){
+			if(arr.length <=1) return arr;
+			for( var i=0, len =  arr.length; i< len; i++ ){
+
+				for( var j = i+1; j< len; j++){
+
+					if(arr[i] > arr[j]){
+						var temp = arr[i];
+						arr[i] = arr[j];
+						arr[j] = temp 
+					}
+				}
+			}
+			return arr;
+		};
+
+		// console.log(_bubbleSort(a));
+		// console.log(_bubbleSort([1]));
+
+		// 快速排序算法
+		var quickSort = function ( arr ){
+
+			if(arr.length <=1 ) return arr;
+
+			var leftArr = [];
+			var rightArr = [];
+			var temp = arr[0];
+			
+			// arr.forEach(function ( item, index){
+			// 	if( item > temp){
+			// 		rightArr.push(item)
+			// 	}else{
+			// 		leftArr.push(item);
+			// 	}
+			// });
+
+			for( var i=1,len = arr.length; i<len; i++){
+				if(arr[i] > temp){
+					rightArr.push(arr[i]);
+				}else{
+					leftArr.push(arr[i]);
+				};
+			};
+
+			return [].concat( quickSort(leftArr), [temp], quickSort(rightArr));
+		};
+
+		//console.log(quickSort([5,1,10,2,4]));
+
+		// 数组的去重
+		var b = [2,3,4,2,3];
+
+		Array.prototype.unique = function (){
+			var n = [];
+			var _this = this;
+			this.forEach( function(item, index){
+				// 方法一
+				// if(_this.indexOf(item) == index){
+				// 	n.push(item);
+				// }
+				// 方法二
+				if(n.indexOf(item) == -1 ) n.push(item);
+				// 方法三 开关
+				
+			});
+			return n;
+
+		};
+
+		console.log(b.unique());
+
+	</script>
+</body>
+</html>

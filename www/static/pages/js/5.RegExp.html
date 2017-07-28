@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		html,body{
+			margin: 0;
+		}
+		 #test1{
+		 	position: relative;
+		 	left:300px;
+		 	top:100px;
+		 	width: 200px;
+		 	height: 50px;
+		 	padding: 10px;
+		 	margin:3px;
+		 	border:1px solid red;
+		 	background: #ccc;
+		 	color:#fff;
+		 }
+	</style>
+</head>
+<body>
+<!-- 这是测试节点的demo1 -->
+	<div id="test1" class="test_class" data-ss =" xiaoming">
+		<div id="test_inner1">我试test1的内容</div>
+		<div id="test_inner2">fafa</div>
+	</div>
+<!-- 这是测试节点的demo2 -->
+	<a id="test2" href="/test/test2/test.html">我试test2的内容</a>
+<!-- 这是测试节点的demo3 -->
+	<div id="test2">我试test3的内容</div>
+
+<script type="text/javascript">
+
+	var t1 = document.getElementById("test1");
+	var t2 = document.getElementById("test2");
+	var i1 = document.getElementById("test_inner1");
+
+	// 基础字符讲解：量词：*?+
+
+	// var str = "abcde";
+	// var str = "abde";
+	// var re1 = /abc*/ //几次都行
+	// var re2 = /abc?/ //最多一次（存在或者不存在）
+	// var re3 = /abc+/ //最少一次
+
+	// console.log(re1.test(str));
+	// console.log(re2.test(str));
+	// console.log(re3.test(str));
+
+	// 基础字符讲解：元字符：
+	
+
+	// https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp/flags
+	// https://github.com/Modernizr/Modernizr/wiki/HTML5-Cross-Browser-Polyfills
+
+	// 定义：
+	// 正则表达式是对字符串操作的一种逻辑公式，就是用事先定义好的一些特定字符、及这些特定字符的组合，组成一个“规则字符串”，这个“规则字符串”用来表达对字符串的一种过滤逻辑。
+
+
+	// RegExp.$1-$9 非标准. 不属于当前的任何规范.该特性是非标准的，请尽量不要在生产环境中使用它！
+	// RegExp.input
+	/*var str = "Jack Ma";
+	var re = /(\w+)\s(\w+)/;
+	str.replace(re, '$1,$2');
+	console.log(RegExp.$1);
+	console.log(RegExp.$2);*/
+
+	// RegExp.prototype 属性表示 RegExp 构造函数的原型对象。
+	// RegExp 实例继承 RegExp.prototype。修改该原型对象上的属性或方法会影响到所有的 RegExp 实例。
+	// RegExp.prototype.flags 
+
+	/*var re = /foo/ig;
+	var re = /foo/myu;
+	console.log(re.flags);*/
+
+	// Polyfill
+	/*
+	var person = {};
+	Object.defineProperty(person, 'name', {
+	    configurable: false,
+	    writable: false,
+	    value: 'Jack'
+	});
+	console.log(person.name);
+	delete person.name;
+	person.name = 'lily';
+	console.log(person.name);
+	*/
+
+	/*
+	if(RegExp.prototype.flags === undefined){
+		Object.defineProperty(RegExp.prototype, 'flags', {
+			configurable: true,
+			writable: false,
+			enumerable:false,
+			get: function (){
+				return this.toString().match(/[gimuy]*$/)[0];
+			}
+		})
+	}
+	*/
+	
+
+	// 1. /a/i; new RegExp('a', 'i')的区别?
+	// 答：new RegExp('a', 'i')//支持变量解析；而前者不支持
+
+	// 2. 支持正则表达式的 String 对象的方法（ test/search/match/replace ） ？
+
+	// 3.test（正则之匹配检测）
+		/*var a = "xingguojie@le.com";
+		var b = "13717853526@163.com";
+		var c = "532867447@qq.com";
+		var d = "532867447@qq.com.cn";
+
+		//var re = /^\w+@\w+\.+(\w+(\.)*\w+)?$/;
+		var re = /^\w+@[a-z0-9]+((\.)[a-z0-9]+){1,3}?$/;
+
+		console.log(re.test(a));
+		console.log(re.test(b));
+		console.log(re.test(c));
+		console.log(re.test(d));*/
+
+	// 4.search (正则之检测)
+
+	/*var str = "abcdedfghi";
+	var re = /d/g;
+	console.log(str.search(re));
+	console.log(str.indexOf('d'));*/
+		
+	// 5.match (正则之提取)
+	/*var str = "张三: 1000，李四：5000，王五：8000。";
+	var re = /\d+/;
+	 var arr = str.match(re);
+	console.log(arr);*/
+	//alert(arr);
+	//默认情况下，找到第一个匹配的结果就返回，后面加个g，就是全局找
+
+	//不加g ["1000", index: 4, input: "张三: 1000，李四：5000，王五：8000。"]
+
+	/*var str = 'abcdabcfgygg';
+	var re = /(a)(b)(c)/g;
+	alert(str.match(re));*/
+
+
+	// 6. replace （正则之替换）
+
+
+	/*var str = "abc,efg,222,444,acc";
+	str = str.replace(/,/g, '.');
+	console.log(str);*/
+
+	/*var str = "5=a, 6=b, 7=c";
+	//str = str.replace(/(\d+)=(\w+)/g, "$2=$1");
+	str = str.replace(/(\d+)=(\w+)/g, function(m,$1,$2,$3,$4){
+		//debugger;
+		console.log(m);
+		console.log($1);
+		console.log($2);
+		console.log($3);
+		console.log($4);
+		return $2 + "=" +$1;
+	});
+	console.log(str);*/
+
+
+	//var str  = "2017-07-06";
+
+	//方法1
+	/*str = str.replace(/(\d+)(-)/g, function($0,$1,$2){
+		return $1 +'.';
+	});*/
+
+	//方法2
+	/*str = str.replace(/(\d+)(-)/g, function($0,$1,$2){
+		return $0.substring(0, $0.length -1) +'.';
+	});*/
+
+	//方法3
+	//str = str.replace(/-/g, '.');
+
+	//方法4
+	/*var s = str.split('-');
+	str = s.join('.');
+	console.log(str);*/
+
+	// 7.split (居然不知道split还有第二参数，规定返回的数组的长度)
+
+	/*var str="How are you doing today?"
+
+	document.write(str.split(" ") + "<br />")
+	document.write(str.split("") + "<br />")
+	document.write(str.split(" ",3))*/
+
+	/*How,are,you,doing,today?
+	H,o,w, ,a,r,e, ,y,o,u, ,d,o,i,n,g, ,t,o,d,a,y,?
+	How,are,you*/
+
+	// 8.常用正则匹配解析
+
+	/*//qq号码： 
+	var re = /^[1-9][0-9]{4,9}$/;
+	//var a = 532867447;
+	var a = 531131231;
+	console.log(re.test(a));*/
+
+	//9.关于 正则匹配的回溯问题？
+	//https://mp.weixin.qq.com/s?__biz=MjM5MTA1MjAxMQ==&mid=2651226630&idx=1&sn=679db84c8f3c1d7267a5ff1531bb089f&chksm=bd495b828a3ed2940323a60e39190118c7bcfb33040ee3278226847d87e7588ca748dc54180e&mpshare=1&scene=1&srcid=07068G7UsaI5KaUoYLyZRP4F#rd
+
+	
+	// regexObj.compile(pattern, flags) 废弃了
+	// 
+	var str = '#foo#';
+	var regex = /foo/y;
+
+	regex.lastIndex = 1;
+	console.log(regex.test(str)); // true
+	regex.lastIndex = 5;
+	console.log(regex.test(str)); // false (lastIndex is taken into account with sticky flag)
+	console.log(regex.lastIndex); // 0 (reset after match failure)
+
+	// h5新生的常用的API
+	// 跨域的解决方案的应用实例 
+	// 常见的客户端存储和应用实例
+	// http://www.cnblogs.com/xinxingyu/p/6075881.html
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<script type="text/javascript" src="jquery-1.11.3.js"></script>
+<script type="text/javascript">
+
+	//----------1.短路表达式：作为"&&"和"||"操作符的操作数表达式 ----------(脉脉之前有个js的笑话)
+	//siblingCheck 
+	//~ 按位非运算符，简单的理解就是改变运算数的符号并减去1，当然，这是只是简单的理解能转换成number类型的数据
+	// ~-1 === 0
+	//1、在 Javascript 的逻辑运算中，0、""、null、false、undefined、NaN 都会判定为 false ，而其他都为 true ；
+	//2、因为 Javascript 的内置弱类型域 (weak-typing domain)，所以对严格的输入验证这一点不太在意，即便使用 && 或者 || 运算符的运算数不是布尔值，仍然可以将它看作布尔运算。虽然如此，还是建议如下：
+
+	//if(foo){ ... }     //不够严谨
+	//if(!!foo){ ... }   //更为严谨，!!可将其他类型的值转换为boolean类型
+
+
+
+	//----------2.预定义常用方法的入口 ----------
+	//class2type
+	//不得不说，jQuery 在细节上做的真的很好，这里首先定义了一个对象变量、一个字符串变量、数组变量，要注意这 3 个变量本身在下文是有自己的用途的（可以看到，jQuery 作者惜字如金，真的是去压榨每一个变量的作用，使其作用最大化）；其次，借用这三个变量，再定义些常用的核心方法，从上往下是数组的 concat、push 、slice 、indexOf 方法，对象的 toString 、hasOwnProperty 方法以及字符串的 trim 方法，core_xxxx 这几个变量事先存储好了这些常用方法的入口，如果下文行文当中需要调用这些方法，将会：
+
+	//1、以数组对象的 concat 方法为例，如果不预先定义好 core_concat = core_deletedIds.concat 而是调用实例 arr 的方法 concat 时，首先需要辨别当前实例 arr 的类型是 Array，在内存空间中寻找 Array 的 concat 内存入口，把当前对象 arr 的指针和其他参数压入栈，跳转到 concat 地址开始执行，而当保存了 concat 方法的入口 core_concat 时，完全就可以省去前面两个步骤，从而提升一些性能；
+
+
+
+	//----------3.钩子机制（hook） ----------
+	/*在 jQuery 2.0.0 之前的版本，对兼容性做了大量的处理，正是这样才让广大开发人员能够忽略不同浏览器的不同特性的专注于业务本身的逻辑。而其中，
+	钩子机制在浏览器兼容方面起了十分巨大的作用。
+
+	钩子是编程惯用的一种手法，用来解决一种或多种特殊情况的处理。
+
+	简单来说，钩子就是适配器原理，或者说是表驱动原理，我们预先定义了一些钩子，在正常的代码逻辑中使用钩子去适配一些特殊的属性，样式或事件，这样可以让我们少写很多 else if 语句。
+
+	
+	*/
+
+	/*
+	如果还是很难懂，看一个简单的例子，举例说明 hook 到底如何使用：
+
+	现在考公务员，要么靠实力，要么靠关系，但领导肯定也不会弄的那么明显，一般都是暗箱操作，这个场景用钩子实现再合理不过了。
+	可以看到，在中间审阅考生这个函数中，运用了很多 else if 来判断是否考生有后门关系，如果现在业务场景发生变化，又多了几名考生，那么 else if 势必越来越复杂，往后维护代码也将越来越麻烦，成本很大，那么这个时候如果使用钩子机制，该如何做呢？*/
+
+	/*可以看到，使用钩子去处理特殊情况，可以让代码的逻辑更加清晰，省去大量的条件判断，上面的钩子机制的实现方式，采用的就是表驱动方式，就是我们事先预定好一张表（俗称打表），用这张表去适配特殊情况。当然 jQuery 的 hook 是一种更为抽象的概念，在不同场景可以用不同方式实现。*/
+
+	/*jQuery.each("Boolean Number String Function Array Date RegExp Object Error".split(" "), function(i, name) {
+		class2type[ "[object " + name + "]" ] = name.toLowerCase();
+	});*/
+	//用于兼容 IE 系列下的一些怪异行为。在遇到钩子函数的时候，要结合具体情境具体分析
+	//从某种程度上讲，钩子是一系列被设计为以你自己的代码来处理自定义值的回调函数。有了钩子，你可以将差不多任何东西保持在可控范围内。
+
+
+	// 从设计模式的角度而言，这种钩子运用了策略模式。
+	//策略模式：将不变的部分和变化的部分隔开是每个设计模式的主题，而策略模式则是将算法的使用与算法的实现分离开来的典型代表。
+	// 使用策略模式重构代码，可以消除程序中大片的条件分支语句。在实际开发中，我们通常会把算法的含义扩散开来，使策略模式也可以用来封装一系列的“业务规则”。只要这些业务规则指向的目标一致，并且可以被替换使用，我们就可以使用策略模式来封装他们。
+
+
+	/*策略模式的优点：
+
+	策略模式利用组合，委托和多态等技术思想，可以有效的避免多重条件选择语句；
+	策略模式提供了对开放-封闭原则的完美支持，将算法封装在独立的函数中，使得它们易于切换，易于理解，易于扩展。
+	策略模式中的算法也可以复用在系统的其它地方，从而避免许多重复的复制粘贴工作。*/
+
+
+	//----------3.ready (在 setTimeout 中触发的函数, 一定会在 DOM 准备完毕后触发)----------
+	//写到这里，发现上文的主题有些飘忽，接近于写成了 如何写出更好的 Javascript 代码，下面介绍一些 jQuery 中我觉得很棒的小技巧。
+
+	//熟悉 jQuery 的人都知道 DOM Ready 事件，传Javascript原生的 window.onload 事件是在页面所有的资源都加载完毕后触发的。如果页面上有大图片等资源响应缓慢, 会导致 window.onload 事件迟迟无法触发，所以出现了DOM Ready 事件。
+	// 此事件在 DOM 文档结构准备完毕后触发，即在资源加载前触发。另外我们需要在 DOM 准备完毕后，再修改DOM结构，比如添加DOM元素等。而为了完美实现 DOM Ready 事件，兼容各浏览器及低版本IE（针对高级的浏览器，可以使用 DOMContentLoaded 事件，省时省力），
+
+	// jQuery.ready() 方法里，运用了 setTimeout() 方法的一个特性， 在 setTimeout 中触发的函数, 一定是在 DOM 准备完毕后触发。
+
+
+	//defineProperty
+
+	//$.extend() 和 $.fn.extend() 区别;
+
+		//扩展静态方法
+		/*$.extend({
+			hello: function(){
+				console.log("hello: " + arguments[0]);
+			}
+		});*/
+
+		// $.hello("xiaoming");
+
+		//扩展实例方法
+
+		/*$.fn.extend({
+			hi: function(){
+				console.log('hi: ' + arguments[0]);
+			}
+		});*/
+
+		// $("body").hi("xiaoxiong");
+		//$("body").hello("xiaoxiong");
+
+		//$.hi("xiaoxiong");
+
+		var a = { 
+			name: "xiaoming", 
+			location: {
+				city: "beijing",
+				county:"chaoyang",
+				language:"chinese"
+			},
+			hobby:{
+				one:"basketball",
+				two:"football"
+			},
+			sex:"male"
+		};
+		var b = { 
+			name: "xiaoxiong", 
+			location: {
+				city: "beijing",
+				county:"haidian"
+			}
+		};
+		var result = $.extend( true, [3,4,33,[11,22]], [3,2,1,[44,55]] );
+		
+		console.log(result);
+
+	//咱们自己来实现一下jquery的extend方法
+	//$.extend(deep, target, obj1, obj2, ... , objn);
+
+		var _extend =  function (){
+
+			var target = arguments[0],
+				length = arguments.length,
+				i = 1,
+				deep = false;
+			var options;
+			//传了深度匹配
+			if( typeof target == 'boolean' ){
+				deep = target;
+				target = arguments[i];
+				i++;
+			};
+
+			// 处理非object情况
+			if( typeof target !== 'object' && typeof target !== 'function'){
+				target = {};
+			}
+
+			if( i === length){
+				target = this;
+				return target;
+				i--;
+			};
+
+			for( ; i<length; i++){
+				options = arguments[i]; 
+				if( options != null ){
+
+					for( key in options){
+						src = target[key];
+						copy = options[key];
+
+						if( target === copy ) continue;
+
+						if(deep && copy && ( $.isPlainObject(copy) || $.isArray(copy) )){
+
+							if($.isArray(copy)){
+								clone = src && $.isArray(src) ? src : [];
+							}else{
+								clone = src && $.isPlainObject(src) ? src : {};
+							};
+
+							target[ name ] = _extend(deep, clone, copy);
+
+						}else if(copy !== undefined ){
+							target[name] == copy;
+						}
+					}
+				}
+			}
+
+
+			return target;
+
+		}
+
+
+		//var _result = $.extend( true, a, b );
+		var _result = $.extend( true, [23,3,4], [3,2,1] );
+
+		// console.log(_result);
+
+	// IE会认为某些functions是object (言辞很严谨啊)
+	// Internet Explorer thinks certain functions are objects
+
+
+
+	// ---------- 4.其他的静态方法----------
+
+	// $.noop(); jQuery.noop()函数是一个空函数，它什么也不做。
+		var result = $.map( [1, 2, 3], $.noop );
+		// document.writeln( result.length ); // 0
+
+	// $.camelCase
+	// var cssStr='background-color';
+	// alert($.camelCase(cssStr)); 
+	// 在方法 jQuery.camelCase() 中，先用正则 rmsPrefix 匹配前缀“ -ms-” ，如果有则修正为“ms-” ；
+	// 然后用正则 rdashAlpha 匹配连字符“-”和其后的第一个字母或数字，并用字符串方法 replace() 和函数 fcamelCase() 把匹配部分替换为对应的大写字母或数字
+
+	// $.trim
+
+	// $.type
+		// $.type() 函数用于确定JavaScript内置对象的类型，并返回小写形式的类型名称。
+		// 如果对象是undefined或null，则返回相应的"undefined"或"null"
+		console.log($.type( undefined ) === "undefined")
+
+		console.log($.type() === "undefined")
+
+		console.log($.type( window.notDefined ) === "undefined")
+
+		console.log($.type( null ) === "null")
+	
+		console.log($.type( true ) === "boolean")
+
+		console.log($.type( 3 ) === "number")
+
+		console.log($.type( "test" ) === "string")
+
+		console.log($.type( function(){} ) === "function")
+
+		console.log($.type( [] ) === "array")
+
+		console.log($.type( new Date() ) === "date")
+
+		console.log($.type( new Error() ) === "error") // jQuery 1.9 新增支持
+
+		console.log($.type( /test/ ) === "regexp")
+		
+		/*
+			class2type:
+			[
+				[object Array]:"array",
+				[object Boolean]:"boolean",
+				[object Date]:"date",
+				[object Error]:"error",
+				[object Function]:"function",
+				[object Number]:"number",
+				[object Object]:"object",
+				[object RegExp]:"regexp",
+				[object String]:"string"
+			]
+		*/
+		
+
+
+		
+
+	//https://github.com/chokcoco/jQuery-
+	//http://www.cnblogs.com/coco1s/p/5303041.html
+	//https://github.com/chokcoco/jQuery-/blob/master/jquery-1.10.2__read.js
+</script>
+</body>
+</html>

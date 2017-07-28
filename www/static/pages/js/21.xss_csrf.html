@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<script type="text/javascript">
+	
+
+	// XSS：跨站脚本（Cross-site scripting）
+	// CSRF：跨站请求伪造（Cross-site request forgery）
+
+	//我的经历：活动接口被刷，北京公交集团网站被黑
+	//接风控啊，
+
+	// GET和POST的使用
+
+		// 在web程序的设计原则上，GET传递参数的操作，不应该改变程序的内部结构，主要用于查询信息的过滤。对于数据库的更删改操作，一定要使用POST方式传值。
+
+	// XSS和CSRF攻击的防御
+
+		// 防御XSS攻击可以通过以下两方面操作： 
+		// 1，对用户表单输入的数据进行过滤，对javascript代码进行转义，然后再存入数据库； 
+		// 2，在信息的展示页面，也要进行转义，防止javascript在页面上执行。
+
+	// CSRF攻击的防御可以通过以下两方面操作： 
+		// 1，所有需要用户登录之后才能执行的操作属于重要操作，这些操作传递参数应该使用post方式，更加安全； 
+		// 2，为防止跨站请求伪造，我们在某次请求的时候都要带上一个csrf_token参数，用于标识请求来源是否合法，csrf_token参数由系统生成，存储在SESSION中。
+</script>
+</body>
+</html>

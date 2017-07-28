@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<script type="text/javascript" src="jquery-1.11.3.js"></script>
+<script type="text/javascript">
+	
+	//1.动态属性
+	/*var a  = new Object();
+	a.name = "xiaoming";
+	alert(a.name);
+
+	var b = "person";
+	b.name = "xiaoxiong";
+	alert(b.name);*/
+
+	//2.基本类型复制变量值
+
+	/*var a = 123;
+	b = a;
+	alert(b);
+	alert(a);
+	b = 234;
+	alert(a);
+	alert(b);*/
+
+	// 基本类型变量的复制：从一个变量向一个变量复制时，会在栈中创建一个新值，然后把值复制到为新变量分配的位置上；
+
+	//3.引用类型复制变量值
+	/*var a = new Object();
+	a.name = "xiaoming";
+
+	var b = a;
+	aler(a.name);
+	aler(b.name);
+
+	b.name = "xiaoxiong";
+
+	aler(a.name);
+	aler(b.name);*/
+
+	//引用类型变量的复制：复制的是存储在栈中的指针，将指针复制到栈中未新变量分配的空间中，
+	//而这个指针副本和原指针执行存储在堆中的同一个对象；
+
+	// 看看PPT总结
+
+	// 函数参数的传递(说明不是按引用传递的，ECMA中所有函数的参数都是按值进行传递的)
+	/*function setName(obj) { 
+	    obj.name = 'xiaoming'; 
+	    obj = new Object();
+	    obj.name = 'xiaoxiong' 
+	}
+
+	var person = new Object()
+
+	setName(person)
+
+	alert(person.name);*/
+
+	//类型的检测（两个操作符 typeof/instanceof
+
+	/*var a = [],
+		b = {},
+		c = 123,
+		d = "abc",
+		e = /adc/,
+		f = null,
+		g = undefined,
+		h = NaN,
+		i = true,
+		j = function(){};
+
+	console.log( typeof a);
+	console.log( typeof b);
+	console.log( typeof c);
+	console.log( typeof d);
+	console.log( typeof e);
+	console.log( typeof f);
+	console.log( typeof g);
+	console.log( typeof h);
+	console.log( typeof i);
+	console.log( typeof j);*/
+
+	//object/object/number/string/object/object/undefined/number/boolean/function
+	//typeof NaN居然是 number
+
+	// console.log( a instanceof Array);
+	// console.log( b instanceof Object);
+	// console.log( e instanceof RegExp);
+	// console.log( j instanceof Function);
+	//console.log( c instanceof Number);
+	//console.log( d instanceof String);
+	//console.log( f instanceof Object);
+	//console.log( g instanceof Object);
+	//console.log( h instanceof Number);
+	//console.log( i instanceof Boolean);
+
+
+	//总结
+
+	//1.   Typeof操作符是检测基本类型的最佳工具；(number, string, undefined, boolean, function)
+	//2.   如果变量值是nul或者对象，typeof 将返回“object”；
+	//3.   Instanceof用于检测引用类型，可以检测到具体的，它是什么类型的实例；（ Array Object RegExp Function )
+	//4.   如果变量是给定引用类型的实例，instanceof操作符会返回true;
+
+
+	// 结合 后面 jquery的 extend方法
+
+	
+	// 转换函数
+	// parseInt()和parseFloat()（方法还有基模式，可以把二进制、八进制、十六进制或其他任何进制的字符串转换成整数）
+		// parseInt("1234blue");   //returns   1234 
+		// parseInt("0xA");   //returns   10 
+		// parseInt("22.5");   //returns   22 
+		// parseInt("blue");   //returns   NaN
+
+		// parseFloat("1234blue");   //returns   1234.0 
+		// parseFloat("0xA");   //returns   NaN 
+		// parseFloat("22.5");   //returns   22.5 
+		// parseFloat("22.34.5");   //returns   22.34 
+		// parseFloat("0908");   //returns   908 
+		// parseFloat("blue");   //returns   NaN
+
+	// 强制类型的转换 
+	// 还可使用强制类型转换（type casting）处理转换值的类型。使用强制类型转换可以访问特定的值，即使它是另一种类型的。
+		// Boolean("");   //false   –   empty   string 
+		// Boolean("hi");   //true   –   non-empty   string 
+		// Boolean(100);   //true   –   non-zero   number 
+		// Boolean(null);   //false   -   null 
+		// Boolean(0);   //false   -   zero 
+		// Boolean(new Object());   //true   –   object
+
+		// Number(false)   0 
+		// Number(true)   1 
+		// Number(undefined)   NaN 
+		// Number(null)   0 
+		// Number( "5.5 ")   5.5 
+		// Number( "56 ")   56 
+		// Number( "5.6.7 ")   NaN 
+		// Number(new   Object())   NaN 
+		// Number(100)   100  
+
+		// var   s1   =   String(null);   //"null" 
+		// var   oNull   =   null; 
+		// var   s2   =   oNull.toString();   //won’t   work,   causes   an   error
+	
+
+	// 隐士转换
+		// var   str= '012.345 '; 
+		// var   x   =   str-0; 
+		// x   =   x*1;
+
+	// 扩展：parseInt 函数可解析一个字符串，并返回一个整数。
+	// 二进制、八进制、十进制与十六进制
+	// 对于进制，有两个基本的概念：基数和运算规则。
+	// 基数：基数是指一种进制中组成的基本数字，也就是不能再进行拆分的数字。二进制是0和1；八进制是0-7；十进制是0-9；十六进制是0-9+A-F（大小写均可）。也可以这样简单记忆，假设是n进制的话，基数就是【0，n-1】的数字，基数的个数和进制值相同，二进制有两个基数，十进制有十个基数，依次类推。
+	// 运算规则：运算规则就是进位或错位规则。例如对于二进制来说，该规则是“满二进一，借一当二”；对于十进制来说，该规则是“满十进一，借一当十”。其他进制也是这样。
+
+	console.log(parseInt("10"));		
+	console.log(parseInt("19",10));		
+	console.log(parseInt("11",2));		
+	console.log(parseInt("17",8));		
+	console.log(parseInt("1f",16));		
+	console.log(parseInt("010"));		
+	console.log(parseInt("abc12"));		
+	//console.log(parseInt("010",2));		
+	// 19
+	// 3
+	// 15
+	// 31
+	// 10
+	// 提示：如果字符串的第一个字符不能被转换为数字，那么 parseFloat() 会返回 NaN。
+
+	
+	// toString() 方法
+
+		/*
+			toString()函数的返回值为String类型。返回当前对象的字符串形式。
+			该方法属于Object对象，由于所有的对象都"继承"了Object的对象实例，因此几乎所有的实例对象都可以使用该方法
+			JavaScript的许多内置对象都重写了该函数，以实现更适合自身的功能需要。
+		*/
+
+		/*
+			console.log([2,3,4].toString());
+			console.log(true.toString());
+			console.log((new Date()).toString());
+			console.log((new Error("error happen")).toString());
+			var a = 124;
+			console.log(a.toString());
+			console.log("abc".toString());
+			console.log({}.toString());
+			var eles = document.getElementsByTagName("body");
+			console.log( eles.toString() ); 
+			console.log( eles[0].toString() );
+		*/
+
+		// 2,3,4
+		// true
+		// Tue Jul 18 2017 14:50:50 GMT+0800 (CST)
+		// Error: error happen
+		// 124
+		// abc
+		// [object Object]
+		// [object HTMLCollection]
+		// [object HTMLBodyElement]
+
+		/*type: function( obj ) {
+			if ( obj == null ) {
+				return obj + "";
+			}
+			return typeof obj === "object" || typeof obj === "function" ?
+				class2type[ toString.call(obj) ] || "object" :
+				typeof obj;
+		},*/
+
+
+		// $.type
+			// $.type() 函数用于确定JavaScript内置对象的类型，并返回小写形式的类型名称。
+			// 如果对象是undefined或null，则返回相应的"undefined"或"null"
+			console.log($.type( undefined ) === "undefined")
+			console.log($.type() === "undefined")
+			console.log($.type( window.notDefined ) === "undefined")
+			console.log($.type( null ) === "null")		
+			console.log($.type( true ) === "boolean")
+			console.log($.type( 3 ) === "number")
+			console.log($.type( "test" ) === "string")
+			console.log($.type( function(){} ) === "function")
+			console.log($.type( [] ) === "array")
+			console.log($.type( new Date() ) === "date")
+			console.log($.type( new Error() ) === "error") // jQuery 1.9 新增支持
+			console.log($.type( /test/ ) === "regexp")
+			
+			/*
+				class2type:
+				[
+					[object Array]:"array",
+					[object Boolean]:"boolean",
+					[object Date]:"date",
+					[object Error]:"error",
+					[object Function]:"function",
+					[object Number]:"number",
+					[object Object]:"object",
+					[object RegExp]:"regexp",
+					[object String]:"string"
+				]
+			*/
+		// http://www.cnblogs.com/huangxincheng/p/4176860.html
+		
+		
+</script>
+</body>
+</html>

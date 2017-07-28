@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<script type="text/javascript">
+
+	//函数作用域与声明提前？
+	var a = 111;
+
+	function test(){
+		alert(a);
+		var a = 222;
+		alert(a);
+	};
+
+	test();
+
+	// JavaScript的函数作用域是指在函数内声明的所有变量在函数体内始终是可见的， 
+	// 即javascript函数里所有声明的变量（但不涉及赋值）都被提前至函数体的顶部，这个特性也被叫做“提前声明”。
+
+	// angular 作用域有人了解过么？
+
+	// <div ng-controller="TestCtrl">
+	//   <p>{{name}}</p>
+	//   <div ng-if="show">
+	//     <input type="text" ng-model="name">
+	//   </div>
+	// </div>
+	// <script>
+	// function TestCtrl($scope){
+	//     $scope.show = true;
+	//     $scope.name = 'htf';
+	// }
+
+	// 作用域
+
+	// 每个 Angular 应用默认有一个根作用域 $rootScope， 根作用域位于最顶层，从它往下挂着各级作用域。
+
+	// 通常情况下，页面中 ng-model 绑定的变量都是在对应的 Controller 中定义的。如果一个变量未在当前作用域中定义，JavaScript 会通过当前 Controller 的 prototype 向上查找，也就是作用域的继承。
+
+
+	// 作用域链？
+	// （看有道云笔记）
+	// 首先，每一段代码（全局代码或函数）都有一个与之关联的作用域链（scope chain），
+	// 这个作用域链可以是一个对象列表或者链表，
+
+
+	</script>
+</script>
+</body>
+</html>

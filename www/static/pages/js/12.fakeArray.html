@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<div class="test">123</div>
+<div class="test">123</div>
+<div class="test">123</div>
+<script type="text/javascript" src="jquery-1.11.3.js"></script>
+<script type="text/javascript">
+	
+	//1. 关于伪数组你知道哪些？
+	// arguments/nodelist/$()/HTMLCollection
+	// 说的浅显一些，就是：存在着length属性，可以通过数组下标的方式进行每个元素的访问，但是不能够使用push等数组的方法。
+
+	// 问：伪数组有没有forEach方法？
+	
+	//2.伪数组转换为数组的4中方法？
+	var aDiv = document.querySelectorAll('div');
+	/*console.log(aDiv);
+	console.log(aDiv.length);
+	console.log(aDiv.constructor == Array);*/
+	//aDiv.push("2");
+	//debugger;
+	// aDiv.__proto__ = Array.prototype;
+
+	//方法一：
+	/*
+	aDiv = Array.prototype.slice.call(aDiv);
+	aDiv = [].slice.call(aDiv);
+	aDiv.push("2");
+	aDiv.push("11");
+	console.log(aDiv);
+	console.log(aDiv.length);
+	console.log(aDiv.constructor == Array);
+	*/
+
+    //方法二：es6
+	/*Array.from(aDiv).forEach(function(p){
+		console.log(p);
+	});*/
+
+	/*[...aDiv].forEach(function(p){
+		console.log(p);
+	})*/ 
+
+	//Array.from方法用于将两类对象转为真正的数组：类似数组的对象（array-like object）和可遍历（iterable）的对象（包括ES6新增的数据结构Set和Map）
+
+	/*var test = function(){
+
+		//arguments = Array.from(arguments);
+		arguments = [...arguments];
+		arguments.push(111);
+		console.log(arguments);
+		console.log(arguments.length);
+	};
+
+	test(1,2,3);
+	var arr = [1,2,3,4];*/
+
+	//甭管是es6/es7/es8，只要原理知道了，框架、语法更新那都应该是基石
+	//把es6看成一个框架，不需要引用的框架，锦上添花
+
+	//用原生封装一个
+	/*const toArray = (() =>
+		Array.from ? Array.from : obj => [].slice.call(obj)
+	)();*/
+
+	/*var toArray = ( function (){
+		return Array.from ? Array.from : function(obj){ return [].slice.call(obj)}
+	})();*/
+
+
+	/*toArray(aDiv).forEach(function(p){
+		console.log(p)
+	});*/
+
+	// 方法3： jquery makeArray();
+	/*var cc = function(arr){
+		[].push.call([],arr)
+		return arr;
+	};
+	aDiv = cc(aDiv);*/
+
+	/*aDiv.forEach(function(p){
+		console.log(p);
+	});*/
+
+	// aDiv.push(444);
+
+	// 可以去看一下他的内部实现, 不手写了
+
+	aDiv = $.makeArray(aDiv);
+	console.log(aDiv);
+
+
+	// 方法4：for循环 （挖坑，用forEach行不行？）
+	/*var aLi = document.querySelectorAll('li');
+    var arr = [];
+    for (var i = 0; i < aLi.length; i++) {
+        arr[arr.length] = aLi[i]
+    };*/
+
+
+</script>
+</body>
+</html>

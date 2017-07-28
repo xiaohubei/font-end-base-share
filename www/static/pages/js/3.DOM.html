@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		html,body{
+			margin: 0;
+		}
+		#test1{
+		 	position: absolute;
+	 	    left: 800px;
+	 	    top: 100px;
+	 	    width: 400px;
+	 	    height: 150px;
+	 	    padding: 10px;
+	 	    margin: 3px;
+	 	    border: 20px solid red;
+	 	    background: #5d5858;
+	 	    color: #fff;
+	 	    overflow:hidden;
+		}
+		#test_inner2{
+		 	position: absolute;
+		 	left: 100px;
+		 	top: 40px;
+		 	background: #fff;
+		 	color: #000;
+		 	width: 120px;
+		 	height: 60px;
+		 	border:1px solid  red;
+		 	text-align: center;
+		}
+	</style>
+</head>
+<body style="height: 3000px">
+<!-- 这是测试节点的demo1 -->
+	<div id="test1" class="test_class" data-ss =" xiaoming">
+		<!-- <div id="test_inner1">我试test1的内容</div> -->
+		<div id="test_inner2">hello</div>
+	</div>
+<!-- 这是测试节点的demo2 -->
+	<a id="test2" href="/test/test2/test.html">我试test2的内容</a>
+<!-- 这是测试节点的demo3 -->
+	<div id="test2">我试test3的内容</div>
+
+<script type="text/javascript">
+	
+	// 1.DOM以层级分有哪些节点？
+	// 答：父节点、子节点、兄弟节点
+
+	// 2.DOM以类型分有哪些节点？
+	// 答：1.元素节点 2.属性节点 3.文本节点 8 注释节点 9 document节点
+
+	//3.chideNodes 和children的区别？
+	/*childNodes : 当前节点下面的所有子节点。   标准的dom属性
+	               在标准下会获取到空白文本节点，ie6/7/8不会。        
+	               在使用childNodes之前最好进行节点类型判断。
+	children : 当前节点下面的所有子节点。 非标准的dom属性
+	               在ie6/7/8下会获取到注释节点。*/
+	var t1 = document.getElementById("test1");
+	var t2 = document.getElementById("test2");
+	var i1 = document.getElementById("test_inner1");
+
+	/*
+		console.log("t1.nodeType: " + t1.nodeType);
+		console.log("t1.nodeName: " + t1.nodeName);
+		console.log("t1.attributes: " + t1.attributes) ;
+		console.log("t1.childNodes: " + t1.childNodes) ;
+		console.log("t1.children: " + t1.children) ;
+		console.log("t1.firstChild: " + t1.firstChild) ;
+		console.log("t1.parentNode: " + t1.parentNode) ;
+		console.log("t1.offsetParent: " + t1.offsetParent);
+	*/
+
+
+
+	//3.1 innerText innerHTML outerHTML outerText 的区别
+	
+
+       /*console.log("t1.innerText: " + t1.innerText);
+       console.log("t1.innerHTML: " + t1.innerHTML);
+       console.log("t1.outerHTML: " + t1.outerHTML);
+       console.log("t1.outerText: " + t1.outerText);*/
+
+	// 4.关于子节点兼容性问题
+
+		/*firstChild : 第一个子节点 在标准和ie9下会获取到空白文本节点。
+		firstElementChild : 标准下获取第一个子元素节点，ie6/7/8不支持。
+		
+		lastChild : 最后一个子节点 在标准和ie9下会获取到空白文本节点。
+		lastElementChild : 标准下获取最后一个子元素节点，ie6/7/8不支持。
+		
+		nextSibling：下一个兄弟节点 在标准和ie9下会获取到空白文本节点。
+		nextElementSibling：标准下获取下一个兄弟节点，ie6/7/8不支持。
+		
+		previousSibling：上一个兄弟节点 在标准和ie9下会获取到空白文本节点。
+		previousElementSibling：标准下获取上一个兄弟节点，ie6/7/8不支持。*/
+
+	// parentNode/offsetParent 的区别
+
+	//5.parentNode；当前元素的父级。没有兼容问题。
+	//7.offsetParent : 当前节点上面最近的有定位属性的祖先级节点。
+	/*
+	    1，如果当前节点的所有祖先节点都没有定位属性（除static值之外的值），标准浏览器是 body 节点。（ie6/7下 当前节点的 offsetParent 是 html 节点
+	    2，如果当前节点设置了 display: none; 属性，在标准浏览器下当前节点的offsetParent 是 null，ie10及以下版本不受影响。        
+		注意： 应当在有定位属性的节点中使用 offsetParent ,否则 OffsetParent 的取值会相当混乱（错误的使用offsetParent会导致各种兼容问题）。
+	*/
+
+	//8.获取节点函数的封装/获取为止的封装
+
+	/*function getPrev(obj){
+        if(!obj||!obj.previousSibling) return null;
+        return obj.previousSibling.nodeType===1?obj.previousSibling:getPrev(obj.previousSibling);
+	}
+	function getNext(obj){
+	    if(!obj||!obj.nextSibling) return null;
+	    return obj.nextSibling.nodeType===1?obj.nextSibling:getNext(obj.nextSibling);
+	}
+	function getFirst(obj){
+        if(!obj||!obj.firstChild) return null;
+        return obj.firstChild.nodeType===1?obj.firstChild:getNext(obj.firstChild);
+	}
+	function getLast(obj){
+        if(!obj||!obj.lastChild)return null;
+        return obj.lastChild.nodeType===1?obj.lastChild:getPrev(obj.lastChild);
+	};*/
+
+	/*
+		function getPos( obj ){
+	           var iPos={ l:0, t:0};
+	           while ( obj ){
+	                   iPos.l+=obj.offsetLeft;
+	                   iPos.t+=obj.offsetTop;
+	                   obj=obj.offsetParent;
+	           };
+	           return iPos;
+	   };
+	 */  
+
+
+	 var t1 = document.getElementById("test1");
+	 var t2 = document.getElementById("test2");
+	 var test_inner1 = document.getElementById("test_inner1");
+	 var test_inner2 = document.getElementById("test_inner2");
+	//9.offsetLeft / offsetTop /offsetWidth /offsetHeight ?
+	
+		console.log("t1.offsetLeft: " + t1.offsetLeft);
+		console.log("t1.offsetTop: " + t1.offsetTop);
+		console.log("t1.offsetWidth: " + t1.offsetWidth);
+		console.log("t1.offsetHeight: " + t1.offsetHeight);
+
+		console.log("t1.clientWidth: " + t1.clientWidth);
+		console.log("t1.clientHeight: " + t1.clientHeight);
+
+		console.log("test_inner2.offsetLeft: " + test_inner2.offsetLeft);
+		console.log("test_inner2.offsetTop: " + test_inner2.offsetTop);
+		console.log("test_inner2.offsetWidth: " + test_inner2.offsetWidth);
+		console.log("test_inner2.offsetHeight: " + test_inner2.offsetHeight);
+
+		console.log("test_inner2.clientWidth: " + test_inner2.clientWidth);
+		console.log("test_inner2.clientHeight: " + test_inner2.clientHeight);
+		
+		// 再加提问 position:absoulte/relative区别
+
+	//答：
+	/*
+		offsetLeft : 
+			当前节点的左外边框到offsetParent的左内边框之间的距离。（不计算边框）注意： 在ie6/7下 会计算 offsetParent 左边框宽度。
+	    offsetTop : 
+	    	当前节点的上外边框到offsetParent的上内边框之间的距离。（不计算边框）注意： 在ie6/7下 会计算 offsetParent 上边框宽度。
+	       
+	    如果当前节点设置了 display: none; 属性，那么当前节点的offsetLeft 和 offsetTop 的值都为 0。（ie6/7/8下受浏览器边框阴影影响取到的值会是-1）。
+
+	    温馨提示： 一定要重置 body,html 的默认样式，否则在当前节点的所有祖先节点都没有定位属性的情况下，offsetLeft \ offsetTop 取值会有兼容问题。(差别在哪？)
+
+	    offsetLeft和offsetTop在firefox下的bug：
+
+	       在 firefox 下：如果当前节点的offsetParent同时设置了边框和overflow的除visible之外的属性，那么，offsetLeft 和 offsetTop的取值分别是：
+
+	       offsetLeft :  当前的left值 - offsetParent的左边框宽度
+	               offsetTop :  当前的top值 - offsetParent的上边框宽度 
+
+	       解决方案：通过修改布局方式来绕开这个bug。在当前节点和parent之间加一个div，并设置overflow：hidden或者border：1px...也就是不让两个属性同时存在。
+	*/
+
+	/*
+	   offsetWidth和offsetHeight包含了border，而client不包含边框。
+       offsetWidth :  width + padding + border
+       offsetHeight :  height + padding + border
+
+       可视区宽：clientWidth :  width + padding
+       可视区高：clientHeight :  height + padding
+    */
+
+
+
+    // 10.操作元素属性：  读操作 和  写操作(基本可以放心使用)
+    /*
+      前两种方式：
+	          .  和  ['']
+	  第三种方式：
+	          获取属性： getAttribute('');
+	          设置属性： setAttribute("","");
+	          删除属性： removeAttribute('');
+	  兼容问题： 只要稍微注意一下，完全不用担心兼容问题。
+	          1，当属性名称是关键字或保留字的时候，标准下不需要处理关键字或保留字，而ie6/7需要处理。
+	          2，当获取两层以上的属性时，标准浏览器不支持。
+	          好处： 放心地使用
+	          1，可以操作行间的自定义属性而不会有bug。
+	          2，可以获取src/href/url的相对地址。（Ie6/7下需要设置第二个参数： 2）
+	  			关于ie6/7中的第二个参数： 告诉浏览器是要获取图片的 src 属性的值，而不是获取图片的绝对路径。
+	 */
+
+	/*
+	    console.log('t1.getAttribute("data-ss"): ' + t1.getAttribute("data-ss"));
+	    console.log('t1.setAttribute("data-ss"): ' + t1.setAttribute("data-ss", "xiaoxiong"));
+	    console.log('t1.getAttribute("data-ss"): ' + t1.getAttribute("data-ss"));
+	    console.log('t1.removeAttribute("data-ss"): ' + t1.removeAttribute("data-ss"));
+	    console.log('t1.getAttribute("data-ss"): ' + t1.getAttribute("data-ss"));
+	    console.log('t2.getAttribute("href"): ' + t2.getAttribute("href"));
+    */
+
+    // 11.用js生成标签
+    //注意点： 如果 appendChild 、 insertBefore 、 replaceChild 操作的是页面已有的元素，那就是直接移动元素的位置，而不是复制一个副本。
+
+    /*
+	    createElement(): 通过标签名的方式创建一个dom元素。
+	            document.createElement(标签名);
+	            注意： 创建出来的元素并不会直接添加到页面上。
+	    appendChild() : 往一个节点最后里面追加一个新的子节点。
+	            父级.appendChild( a );把a追加到后面去
+	    insertBefore() : 往一个节点里面的指定子节点前面插入一个新的子节点。
+	            父级.insertBefore( a，b ); 把a插到b里面。
+	    removeChild() : 从一个节点里面删除指定的子节点。
+	            父级.removeChild( a );删除a节点。
+	    replaceChild() : 用一个节点替换另一个节点里面的指定的子节点。
+	            父级.replaceChild( a，b );把b换成a。
+    */
+
+    // 12.如何修改className（添加，修改，删除）
+
+    /*console.log('t1.className: ' + t1.className);
+    t1.className += " test_class2"
+    console.log('t1.className: ' + t1.className);*/
+    /*
+	    function removeClass( obj, sClass ){        
+	           var aClass = obj.className.split(' ');        
+	           if( !obj.className )return;
+	           for(var i=0; i<aClass.length; i++){
+	                   if( aClass[i] == sClass ){
+	                           aClass.splice(i,1);
+	                           obj.className = aClass.join(' ');                        
+	                   }                
+	           }
+	    };
+
+	    function addClass( obj, sClass ){        
+	           var aClass = obj.className.split(' ');        
+	           if( !obj.className ){
+	                   obj.className = sClass;
+	                   return;                
+	           }
+	           for(var i=0; i<aClass.length; i++){        
+	                   if( aClass[i] == sClass )return;                
+	           }        
+	           obj.className += ' ' + sClass;        
+	    };
+	*/
+	// 思考： 请大家用正则去完成者两个方法的
+
+	//13 如何获得浏览器的滚动高度？
+
+	var _body = document.getElementsByTagName("body")[0];
+	_body.onscroll = function(e){
+		//debugger;
+		console.log("window.scrollY: " + window.scrollY);
+		console.log("window.pageYOffset: " + window.pageYOffset);
+		console.log("document.body.scrollTop: " + document.body.scrollTop);
+		//var scrollTop = window.pageYoffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+
+		// pageYOffset是window对象，适用于FF，chrome，IE9+，opera等多浏览器支持
+		// scrollY是window对象，适用于FF，chrome，opera支持，ie不支持，
+		// scrollTop 使用时要区分是否声明了DTD的情况 
+			// 未声明 DTD ： document.body.scrollTop;　　//兼容所有浏览器，来获取滚动条的偏移量; 
+			// 声明了 DTD ： document.documentElement.scrollTop;　　//chrome，safari值为0; 
+	}
+
+	
+
+
+
+
+
+
+</script>
+</body>
+</html>
