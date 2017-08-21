@@ -30,12 +30,7 @@ node_modules/
 output/
 output.tar.gz
 
-app/
-
 runtime/
-
+app/
 .DS_Store
-.babelrc
-
-.thinkjsrc
-.vscode
+.vscode/

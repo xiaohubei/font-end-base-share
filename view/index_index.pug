@@ -20,23 +20,30 @@ html
         header
             .wrap
                 h1 Font-End-Base-Share By xiaohubei
+                //- p
+                //-     :comment(addStart addEnd)
+                //-         Filter
+                //-         Body
         .content
             .list
                 .item
                     .step 1
                     h2 Javascript
                     ul
-                        each list in js_list
-                            a(href='#{list.href}') #{list.name}
+                        each list in renderData.js_list
+                            - var url = list.href
+                            a(href = url) #{list.name}
                 .item
                     .step 2
                     h2 CSS
                     ul
-                        each list in css_list
-                            a(href='#{list.href}') #{list.name}
+                        each list in renderData.css_list
+                            - var url = list.href
+                            a(href = url) #{list.name}
                 .item
                     .step 3
                     h2 HTML5
                     ul
-                        each list in h5_list
-                            a(href='#{list.href}') #{list.name}
+                        each list in renderData.h5_list
+                            - var url = list.href
+                            a(href = url) #{list.name}
