@@ -1,22 +1,21 @@
 const Base = require('./base.js');
-
 import fs from 'fs';
 import path from 'path';
 
 let renderData = {
-  js_list:[],
-  css_list:[],
-  h5_list:[]
+  	js_list:[],
+  	css_list:[],
+  	h5_list:[]
 };
 let path_base = {
-  js:"/static/pages/js/",
-  css:"/static/pages/css/",
-  h5:"/static/pages/h5/"
+  	js:"/static/pages/es5",
+  	css:"/static/pages/css/",
+  	h5:"/static/pages/h5/"
 }
 let getDir = function (url){
-  var arr = url.split('.');
-  var len = arr.length;
-  return arr[len-1];
+ 	var arr = url.split('.');
+  	var len = arr.length;
+  	return arr[len-1];
 }
 let getFileName =  function (file_path){
   return new Promise(function( resolve, reject){
@@ -39,7 +38,7 @@ let getFileName =  function (file_path){
                         })
                     }
                 }else if(stats.isDirectory()){
-                  debugger;
+                //   debugger;
                     console.log('stats.isDirectory');
                 }
                 if(index == files.length -1)resolve({result:1});
@@ -53,20 +52,15 @@ module.exports = class extends Base {
   async indexAction() {
     debugger;
     let page_path = `${think.ROOT_PATH}/${think.config("static_page_path")}`;
-    let page_js_path = page_path+ "/js/";
+    let page_js_path = page_path+ "/es5/";
     let page_css_path = page_path+ "/css/";
     let page_h5_path = page_path+ "/h5/";
 
     let re = await getFileName(page_js_path);
-    debugger;
     // renderData.css_list = await getFileName("page_css_path");
     // renderData.h5_list = await getFileName("page_h5_path");
-    debugger;
     console.log(renderData)
-    
-    // this.assign(renderData);
-    this.assign('renderData', renderData);
-    // this.assign('title', 'thinkjs'); //给模板赋值
-    return this.display();
+    this.assign('renderData', renderData); // 给模板赋值
+    await this.display();
   }
 };

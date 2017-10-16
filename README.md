@@ -1,5 +1,5 @@
 
-Application created by [ThinkJS](http://www.thinkjs.org)
+this application is maked for leaning of  basic knowledge of FE by [xingguojie](https://github.com/xiaohubei)
 
 ## Install dependencies
 
